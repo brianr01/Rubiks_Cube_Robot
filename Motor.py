@@ -1,92 +1,63 @@
 import Gpio
 import time
+default_power_state = False
 
-#stored in the format 'step , direction , micro 1 , micro 2 , micro 3 , power'
-motor_array = {}
-
-def Initiate_Motor_Controll(motor_name = False , motor_step_pin = False , motor_direction_pin = False , motor_micro_step_pin_one = False , motor_micro_step_pin_two = False , motor_micro_step_pin_three = False , motor_power_pin = False):
-    motor_array[motor_name] = [motor_step_pin , motor_direction_pin , motor_micro_step_pin_one , motor_micro_step_pin_two , motor_micro_step_pin_three , motor_power_pin]
-    Gpio.Set_Up_Pins(motor_array[motor_name])
-    
-
-def Initiate_Motors_Controll(amount_of_motors = 0 , motor_names = False , motor_step_pins = False , motor_direction_pins = False , motor_micro_step_pins_one = False , motor_micro_step_pins_two = False , motor_micro_step_pins_three = False , motor_power_pins = False):
-    motor_names = List_Modifyer(motor_names , amount_of_motors)
-    motor_step_pins = List_Modifyer(motor_step_pins , amount_of_motors)
-    motor_direction_pins = List_Modifyer(motor_direction_pins , amount_of_motors)
-    motor_micro_step_pins_one = List_Modifyer(motor_micro_step_pins_one , amount_of_motors)
-    motor_micro_step_pins_two = List_Modifyer(motor_micro_step_pins_two , amount_of_motors)
-    motor_micro_step_pins_three = List_Modifyer(motor_micro_step_pins_three , amount_of_motors)
-    motor_power_pins = List_Modifyer(motor_power_pins , amount_of_motors)
-    for i in range(0,amount_of_motors):
-        Initiate_Motor_Controll(motor_names[i] , motor_step_pins[i] , motor_direction_pins[i] , motor_micro_step_pins_one[i], motor_micro_step_pins_two[i] , motor_micro_step_pins_three[i] , motor_power_pins[i])
+class Motor:
+    def __init__(self, step_pin, direction_pin, power_pin, micro_step_level = 1):
+        #sets the micro step level
+        self.micro_step_level = micro_step_level
         
-def List_Modifyer(list,amount_of_motors):
-    temporary_variable = []
-    if list == False:
-        for i in range(0 , amount_of_motors + 1):
-            temporary_variable.append(False)
-        return temporary_variable
-    
-    return list
+        #defines the pins to step, change direction, and power the motor
+        self.step_pin      = step_pin
+        self.direction_pin = direction_pin
+        self.power_pin     = power_pin
         
-
-def Step_Motor(motor_name , direction , steps , delay_between_steps):
-            
-    Gpio.Toggle_Pin(motor_array[motor_name][1] ,direction)
-
-    for i in range(steps):
-        Gpio.Toggle_Pin(motor_array[motor_name][0] , True)
-        time.sleep(delay_between_steps)
-        Gpio.Toggle_Pin(motor_array[motor_name][0] , False)
-
-
-
-
-def Step_Multiple_Motors(motor_names , directions , steps , delay_between_steps):
-    #unused_motors = ['r','l','u','d','f','b']
-    #Toggle_List_Motor_Power(unused_motors,False)
-    #Toggle_List_Motor_Power(motor_names,True)
-    #time.sleep(.1)
-    for i in range(len(motor_names)):
-            Gpio.Toggle_Pin(motor_array[motor_names[i].lower()][1] , directions[i])
-    
-    step = 0
-    for i in range(0,steps):
-        for i in range(len(motor_names)):
-            Gpio.Toggle_Pin(motor_array[motor_names[i].lower()][0] , True)
-        step+=1
-        time.sleep(curve(step))        
-        for i in range(len(motor_names)):
-            Gpio.Toggle_Pin(motor_array[motor_names[i].lower()][0] , False)
-        time.sleep(curve(step))
-
-
-def curve(iteration):
-
-
-    #sleep_time =.0002325
-    #print(sleep_time,iteration)
-    #return sleep_time
-    
-
-    max_sleep_time =.00005
-    min_sleep_time =.000009
-    steps =200
-    sleep_time = ((max_sleep_time-min_sleep_time)/((0-(steps/2))**2))*((iteration-(steps/2))**2)+min_sleep_time
-    #sleep_time = .00005
-    return sleep_time
-#additional code needed to add this functionality
-#def Toggle_Micro_step():
-            
-def Toggle_List_Motor_Power(list, state):
-    for i in range(len(list)):
-        Toggle_Motor_Power(list[i] , state)
-    
-def Toggle_Motor_Power(motor_name , state):
-    if state == True:
-        Gpio.Toggle_Pin(motor_array[motor_name.lower()][5] , False)
+        #defines the current direction
+        self.direction = True
+        #defines the current power state
+        self.power = default_power_state
+        self.acceleration_curve = 'default'
         
-    if state == False:
-        Gpio.Toggle_Pin(motor_array[motor_name.lower()][5] , True)
+        #sets up the pins
+        Gpio.set_up_pins([self.step_pin, self.direction_pin, self.power_pin])
+        #sets the power state of the motor to the default power state
+        self.set_motor_power(default_power_state)     
+
+    def set_motor_power(self, state = 'toggle'):    
+        if(state == 'toggle'):
+            self.power != self.power
+            Gpio.toggle_pin(self.power_pin, self.power)
         
-            
+        elif(state == True or state == False):
+            self.power = state
+            Gpio.toggle_pin(self.power_pin, not self.power)
+        
+        Gpio.toggle_pin(self.power_pin, False)
+
+    def set_motor_direction(self, direction = 'toggle'):       
+        if(state == 'toggle'):
+            self.direction != self.direction
+            Gpio.toggle_pin(self.direction_pin, self.direction)
+
+        elif(state == True or state == False):
+            self.direction = direction
+            Gpio.toggle_pin(self.direction_pin, self.direction)
+    
+    def step_motor(self):
+        Gpio.toggle_pin(self.step_pin, True)
+        Gpio.toggle_pin(self.step_pin, False)
+   
+    def turn_motor(self, steps):      
+        for step in range(0,steps):
+            sleep_time = .001
+            #TODO
+            #make sleep time an acceleration curve
+            time.sleep(sleep_time)
+            self.step_motor()
+
+    def turn_motors(motors, steps):
+        for step in range(0,steps):
+            for motor in motors:
+                time.sleep(0.0001)
+                #sleep_time = motor.acceleration_curve[step]
+                motor.step_motor()
