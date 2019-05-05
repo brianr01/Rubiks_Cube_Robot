@@ -6,13 +6,21 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 
 def set_up_pin(pin):
-    GPIO.setup(int(pin), GPIO.OUT)
+    try:
+        GPIO.setup(pin, GPIO.OUT)
+    except Exception as error:
+        return error
 
 def set_up_pins(pins):
-    for (i in pins):
-        if i != False:
-            Set_Up_Pin(int(i))
-		
-def toggle_pin(pin,state):
-    GPIO.output(pin,state)
+    for pin in pins:
+        set_up_pin(pin)
     
+
+def toggle_pin(pin, state):
+    try:
+        GPIO.output(pin, state)
+    except Exception as error:
+        return error
+    
+def tear_down_pins():
+    GPIO.cleanup()

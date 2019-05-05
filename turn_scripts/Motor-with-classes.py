@@ -3,84 +3,61 @@ import time
 default_power_state = False
 
 class Motor:
-
     def __init__(self, step_pin, direction_pin, power_pin, micro_step_level = 1):
-        self.pins =
-        self.step_pin = step_pin
-        self.direction_pin = direction_pin
-        self.power_pin = power_pin
+        #sets the micro step level
         self.micro_step_level = micro_step_level
+        
+        #defines the pins to step, change direction, and power the motor
+        self.step_pin      = step_pin
+        self.direction_pin = direction_pin
+        self.power_pin     = power_pin
+        
+        #defines the current direction
         self.direction = True
-        self.power = False
-        Gpio.set_up_pins(self.pins)
-        self.set_motor_power(default_power_state)
+        #defines the current power state
+        self.power = default_power_state
         self.acceleration_curve = 'default'
+        
+        #sets up the pins
+        Gpio.set_up_pins([self.step_pin, self.direction_pin, self.power_pin])
+        #sets the power state of the motor to the default power state
+        self.set_motor_power(default_power_state)     
 
-    def set_motor_power(self, state = 'toggle'):
-
+    def set_motor_power(self, state = 'toggle'):    
         if(state == 'toggle'):
             self.power != self.power
             Gpio.toggle_pin(self.power_pin, self.power)
-            return True
-
+        
         elif(state == True or state == False):
             self.power = state
-            Gpio.toggle_pin(self.power_pin, self.power)
-            return True
+            Gpio.toggle_pin(self.power_pin, not self.power)
+        
+        Gpio.toggle_pin(self.power_pin, False)
 
-        else:
-            return False
-
-    def set_motor_direction(self, direction = 'toggle'):
+    def set_motor_direction(self, direction = 'toggle'):       
         if(state == 'toggle'):
             self.direction != self.direction
             Gpio.toggle_pin(self.direction_pin, self.direction)
-            return True
-        
+
         elif(state == True or state == False):
             self.direction = direction
-            Gpio.toggle_pin(self.direction_pin self.direction)
-        
-        else:
-            return False
+            Gpio.toggle_pin(self.direction_pin, self.direction)
     
-    def step_motor(self,sleep_time):
+    def step_motor(self):
         Gpio.toggle_pin(self.step_pin, True)
-        time.sleep(sleep_time)
-        Gpio.toggle_pin(self.step_pin, True)
-
-    '''
-    def turn_motor(self, steps):
-        set_motor_direction(self, direction = direction)
-        for(step in range(0,steps)):
-            sleep_time = self.acceleration_curve[step]
-            step_motor(self, sleep_time)
+        Gpio.toggle_pin(self.step_pin, False)
+   
+    def turn_motor(self, steps):      
+        for step in range(0,steps):
+            sleep_time = .001
+            #TODO
+            #make sleep time an acceleration curve
+            time.sleep(sleep_time)
+            self.step_motor()
 
     def turn_motors(motors, steps):
-        for motor in motors:
-            sleep_time = self.acceleration_curve[step]
-            motor.step_motor(c)
-            
-    #ex nodes [[0, 0.1],[100, 0.0001],[290, 0.1]]
-    def set_acceleration_curve(self, steps, nodes = 'default', type = 'linear'):
-        if(nodes = 'default'):
-            return False
-        acceleration_curve = []
-        current_node = 0
-        if(type = 'linear'):
-            node_number = 0
-            for(step in steps):
-                if(nodes[current_node + 1] == step)
-                    current_node += 1
-                
-                
-                next_node = nodes[current_node + 1]
-
-                if(current_node = 0):
-                    slope = (current_node[1] - next_node[1] / current_node[0] - next_node[0])
-                    sleep_time = - slope * (current_node[0] - step) + current_node[1]
-                    acceleration_curve.append(sleep_time)
-    '''
-        
-
-
+        for step in range(0,steps):
+            for motor in motors:
+                time.sleep(0.0001)
+                #sleep_time = motor.acceleration_curve[step]
+                motor.step_motor()
