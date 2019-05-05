@@ -5,9 +5,10 @@ default_power_state = False
 class Motor:
 
     def __init__(self, step_pin, direction_pin, power_pin, micro_step_level = 1):
-        self.pins.step = step_pin
-        self.pins.direction = direction_pin
-        self.pins.power = power_pin
+        self.pins =
+        self.step_pin = step_pin
+        self.direction_pin = direction_pin
+        self.power_pin = power_pin
         self.micro_step_level = micro_step_level
         self.direction = True
         self.power = False
@@ -18,13 +19,13 @@ class Motor:
     def set_motor_power(self, state = 'toggle'):
 
         if(state == 'toggle'):
-            self.power = ! self.power
-            Gpio.toggle_pin(self.pins.power, self.power)
+            self.power != self.power
+            Gpio.toggle_pin(self.power_pin, self.power)
             return True
 
         elif(state == True or state == False):
             self.power = state
-            Gpio.toggle_pin(self.pins.power, self.power)
+            Gpio.toggle_pin(self.power_pin, self.power)
             return True
 
         else:
@@ -32,21 +33,21 @@ class Motor:
 
     def set_motor_direction(self, direction = 'toggle'):
         if(state == 'toggle'):
-            self.direction = ! self.direction
-            Gpio.toggle_pin(self.pins.direction, self.direction)
+            self.direction != self.direction
+            Gpio.toggle_pin(self.direction_pin, self.direction)
             return True
         
         elif(state == True or state == False):
             self.direction = direction
-            Gpio.toggle_pin(self.pins.direction, self.direction)
+            Gpio.toggle_pin(self.direction_pin self.direction)
         
         else:
             return False
     
     def step_motor(self,sleep_time):
-        Gpio.toggle_pin(self.pins.step, True)
+        Gpio.toggle_pin(self.step_pin, True)
         time.sleep(sleep_time)
-        Gpio.toggle_pin(self.pins.step, True)
+        Gpio.toggle_pin(self.step_pin, True)
 
     '''
     def turn_motor(self, steps):
