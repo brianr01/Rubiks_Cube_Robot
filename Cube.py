@@ -9,11 +9,9 @@ motors_pins = {'r':[5, 3, 12],
 
 opposite_side_dictionary = {'r':'l','l':'r','u':'d','d':'u','f':'b','b':'f'}                                                                  
 
-#Motor.Toggle_List_Motor_Power('udfblr', True)
 motors = {}
 for motor_pins in motors_pins:
     motors[motor_pins] = Motor.Motor(motors_pins[motor_pins][0], motors_pins[motor_pins][1], motors_pins[motor_pins][2])
-    
     
     
 class Cube:

@@ -15,7 +15,6 @@ def set_up_pins(pins):
     for pin in pins:
         set_up_pin(pin)
     
-
 def toggle_pin(pin, state):
     try:
         GPIO.output(pin, state)

@@ -4,22 +4,23 @@ default_power_state = False
 
 class Motor:
     def __init__(self, step_pin, direction_pin, power_pin, micro_step_level = 1):
-        #sets the micro step level
+
         self.micro_step_level = micro_step_level
-        
-        #defines the pins to step, change direction, and power the motor
+
         self.step_pin = step_pin
         self.direction_pin = direction_pin
         self.power_pin = power_pin
         
         #defines the current direction
         self.direction = True
+
         #defines the current power state
         self.power = default_power_state
         self.acceleration_curve = 'default'
         
         #sets up the pins
         Gpio.set_up_pins([self.step_pin, self.direction_pin, self.power_pin])
+
         #sets the power state of the motor to the default power state
         self.set_motor_power(default_power_state)     
 
@@ -35,7 +36,6 @@ class Motor:
         else:
             return "error: parameter 'state' was in an invalid state. value ={}".format(state)
         
-
     def set_motor_direction(self, direction = 'toggle'):       
         if(direction == 'toggle'):
             self.direction != self.direction
@@ -64,5 +64,6 @@ class Motor:
         for step in range(0,steps):
             for motor in motors:
                 time.sleep(0.0001)
+                #TODO
                 #sleep_time = motor.acceleration_curve[step]
                 motor.step_motor()
