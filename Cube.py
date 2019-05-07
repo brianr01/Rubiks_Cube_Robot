@@ -41,13 +41,3 @@ class Cube:
     def power_on(self):
         for motor in self.sides:
             self.sides[motor].set_motor_power(state = True)   
-    
-cube = Cube(motors_pins)
-cube.power_on()
-cube.execute_algorithm('rururu')
-cube.power_off()
-
-
-    
-
-    
