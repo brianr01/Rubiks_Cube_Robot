@@ -8,9 +8,9 @@ class Motor:
         self.micro_step_level = micro_step_level
         
         #defines the pins to step, change direction, and power the motor
-        self.step_pin      = step_pin
+        self.step_pin = step_pin
         self.direction_pin = direction_pin
-        self.power_pin     = power_pin
+        self.power_pin = power_pin
         
         #defines the current direction
         self.direction = True
@@ -32,6 +32,9 @@ class Motor:
             self.power = state
             Gpio.toggle_pin(self.power_pin, not self.power)
         
+        else:
+            return "error: parameter 'state' was in an invalid state. value ={}".format(state)
+        
 
     def set_motor_direction(self, direction = 'toggle'):       
         if(direction == 'toggle'):
@@ -41,6 +44,9 @@ class Motor:
         elif(direction == True or direction == False):
             self.direction = direction
             Gpio.toggle_pin(self.direction_pin, self.direction)
+        
+        else:
+            return "error: parameter 'direction' was in an invalid state. value ={}".format(direction)
     
     def step_motor(self):
         Gpio.toggle_pin(self.step_pin, True)

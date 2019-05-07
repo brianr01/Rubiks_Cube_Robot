@@ -1,10 +1,11 @@
 import Motor
 
-#The pins order in terms of cube notation is 'rludfb'
-direction_pins =[3,7,13,29,33,37]
-step_pins =     [5,11,15,31,35,40]
-power_pins =   [12,36,16,22,18,32]
-motors_pins = {'r':[5, 3, 12], 'l':[11, 7, 36], 'u':[15, 13, 16], 'd':[31, 29, 22], 'f':[35, 33, 18], 'b':[40, 37, 32]}
+motors_pins = {'r':[5, 3, 12],
+               'l':[11, 7, 36],
+               'u':[15, 13, 16], 
+               'd':[31, 29, 22], 
+               'f':[35, 33, 18], 
+               'b':[40, 37, 32]}
 
 opposite_side_dictionary = {'r':'l','l':'r','u':'d','d':'u','f':'b','b':'f'}                                                                  
 
@@ -39,29 +40,7 @@ class Cube:
     
     def power_on(self):
         for motor in self.sides:
-            self.sides[motor].set_motor_power(state = True)
-    '''
-    def simplify_algorithm(self, algorithm):
-        simplified_algorithm = []
-        move = 0
-        while(move < len(algorithm)):
-            if (algorithm[move].lower() == opposite_side_dictionary[algorithm[move + 1].lower()]):
-                print(algorithm[move])
-                simplified_algorithm.append([algorithm[move], algorithm[move + 1]])
-                if len(algorit == move:
-                    simplified_algorithm.append(algorithm[move + 2])
-                    move += 1
-                else:
-                    move += 2
-                print('appended 2')
-            else:
-                simplified_algorithm.append(algorithm[move])
-                move += 1
-                
-                
-        return simplified_algorithm
-    '''         
-    
+            self.sides[motor].set_motor_power(state = True)   
     
 cube = Cube(motors_pins)
 cube.power_on()
