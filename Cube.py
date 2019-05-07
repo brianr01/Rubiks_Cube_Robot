@@ -7,18 +7,13 @@ motors_pins = {'r':[5, 3, 12],
                'f':[35, 33, 18], 
                'b':[40, 37, 32]}
 
-opposite_side_dictionary = {'r':'l','l':'r','u':'d','d':'u','f':'b','b':'f'}                                                                  
+opposite_side_dictionary = {'r':'l','l':'r','u':'d','d':'u','f':'b','b':'f'}                                                                      
 
-motors = {}
-for motor_pins in motors_pins:
-    motors[motor_pins] = Motor.Motor(motors_pins[motor_pins][0], motors_pins[motor_pins][1], motors_pins[motor_pins][2])
-    
-    
 class Cube:
     def __init__(self, motors_pins):
         self.sides = {}
-        for motor_pins in motors_pins:
-            self.sides[motor_pins] = Motor.Motor(motors_pins[motor_pins][0], motors_pins[motor_pins][1], motors_pins[motor_pins][2])
+        for pins in motors_pins:
+            self.sides[motor_pins] = Motor.Motor(pins[motor_pins][0], pins[motor_pins][1], pins[motor_pins][2])
     
     def execute_algorithm(self, algorithm):
         for move in algorithm:
