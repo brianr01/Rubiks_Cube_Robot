@@ -32,14 +32,13 @@ class Motor:
             self.power = state
             Gpio.toggle_pin(self.power_pin, not self.power)
         
-        Gpio.toggle_pin(self.power_pin, False)
 
     def set_motor_direction(self, direction = 'toggle'):       
-        if(state == 'toggle'):
+        if(direction == 'toggle'):
             self.direction != self.direction
             Gpio.toggle_pin(self.direction_pin, self.direction)
 
-        elif(state == True or state == False):
+        elif(direction == True or direction == False):
             self.direction = direction
             Gpio.toggle_pin(self.direction_pin, self.direction)
     
@@ -49,7 +48,7 @@ class Motor:
    
     def turn_motor(self, steps):      
         for step in range(0,steps):
-            sleep_time = .001
+            sleep_time = .0005
             #TODO
             #make sleep time an acceleration curve
             time.sleep(sleep_time)
