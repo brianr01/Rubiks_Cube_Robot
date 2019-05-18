@@ -308,11 +308,11 @@ while stop == False:
     cv2.setMouseCallback('cube', mouse_callback_2)
     cv2.imshow('cube',cube_image)
     #shows image
-    cv2.imshow('frame',frame)
+    #cv2.imshow('frame',frame)
 
     
-    mask = cv2.inRange(frame,lowerColor,upperColor)
-    RenderFilledpolygon(mask,polygons[current_polygon])
+    #mask = cv2.inRange(frame,lowerColor,upperColor)
+    #RenderFilledpolygon(mask,polygons[current_polygon])
     #emergency quit
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
