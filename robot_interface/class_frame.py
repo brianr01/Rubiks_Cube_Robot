@@ -16,7 +16,6 @@ class frame:
         x_offset = self.location[0]
         y_offset = self.location[1]
         
-        
         if not(image is None):
             self.image = image
         elif not(self.action_to_get_image is None):

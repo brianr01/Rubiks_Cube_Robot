@@ -6,8 +6,6 @@ import numpy as np
 import class_button
 import class_frame
 import random
-import 
-#import UseWebCam
 
 print('imported')
 x_offset=0
