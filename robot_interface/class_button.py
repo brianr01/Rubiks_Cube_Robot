@@ -22,7 +22,7 @@ class button:
                 
 
         if text_color.lower() in color_switcher:
-            self.text_color = color_switcher[color]
+            self.text_color = color_switcher[text_color]
         else:
             self.text_color = text_color
 

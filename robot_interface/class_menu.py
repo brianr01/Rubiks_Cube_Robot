@@ -22,7 +22,7 @@ class menu:
 
         self.buttons = []
         for button in buttons:
-            self.buttons.append((button.class_button.button['size'], button['location'], button['color'], button['text_color'], button['text'], button['action'], parameters = button['parameters']))
+            self.buttons.append(class_button.button(button['size'], button['location'], button['color'], button['text_color'], button['text'], button['action'], parameters = button['parameters']))
 
         self.frames = {}
         for frame in frames:
@@ -34,16 +34,28 @@ class menu:
             button.update(location, mouse_code)
 
     def render(self, frame, new_frame_info):
-        for frame in self.frames:
-            if frame in new_frame_info:
-                if 'image' in new_frame_info[frame]:
-                    frame = self.frames[frame],render(frame, parameter = new_frame_info[frame]['image'])
+        for segment in self.frames:
+            if segment in new_frame_info:
+                if 'image' in new_frame_info[segment]:
+                    frame = self.frames[segment],render(frame, parameter = new_frame_info[segment]['image'])
 
                 elif 'parameter' in new_frame_info[frame]:
-                    frame = self.frames[frame],render(frame, parameter = new_frame_info[frame]['parameter'])
+                    frame = self.frames[segment],render(frame, parameter = new_frame_info[segment]['parameter'])
                 
                 else:
                     raise Exception('new_frame_info did not have a valid value inside of "image" or "parameter"')
 
             else:    
-                frame = self.frames[frame].render(frame)
+                frame = self.frames[segment].render(frame)
+
+        for button in self.buttons:
+            frame = button.render(frame)
+
+
+
+        return frame
+
+
+
+
+
