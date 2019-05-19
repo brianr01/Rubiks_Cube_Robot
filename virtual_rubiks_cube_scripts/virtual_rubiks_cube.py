@@ -75,7 +75,6 @@ class Virtual_Cube:
                               'l':['l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9'],
                               'b':['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9']}
 
-
     #takes an input in cube notation and executes them on the virtual cube
     def execute_algorithm(self, algorithm):
         move_list = len(algorithm)
@@ -241,5 +240,7 @@ class Virtual_Cube:
                 line += combined_array[i][j]
             less_lines.append(line)
         return less_lines
-            
 
+    def get_cube_state(self):
+        return self.cube_position
+     

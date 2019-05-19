@@ -15,7 +15,7 @@ class frame:
     def render(self, frame, image = None, parameters = None):
         x_offset = self.location[0]
         y_offset = self.location[1]
-
+        
         
         if not(image is None):
             self.image = image

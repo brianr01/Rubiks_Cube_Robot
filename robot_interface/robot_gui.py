@@ -6,6 +6,7 @@ import numpy as np
 import class_button
 import class_frame
 import random
+import 
 #import UseWebCam
 
 print('imported')
@@ -13,7 +14,17 @@ x_offset=0
 y_offset = 0
 
 cap = cv2.VideoCapture(0)
+cap.set(3, 960)
+cap.set(4, 720)
+
+print('setup camera0')
+
+
 cap1 = cv2.VideoCapture(1)
+cap1.set(3, 960)
+cap1.set(4, 720)
+
+print('setup camera1')
 
 def turn_side(side):
     print('turned side', side)
@@ -40,10 +51,15 @@ def load_profile(profile_number):
     print('load_profile', profile_number)
 
 
-def get_image():
-    image = np.zeros((10,800,3), np.uint8)
-    image[:] = (55, 34, 255)
-    return image
+def get_current_and_resize_frame(camera):
+    ret, current_frame = camera.read()
+    scale_percent = 28 # percent of original size
+    width = int(camera_frame0.shape[1] * scale_percent / 100)
+    height = int(camera_frame0.shape[0] * scale_percent / 100)
+    dim = (width, height)
+    current_frame = cv2.resize(current_frame, dim, interpolation = cv2.INTER_AREA)
+    return current_frame
+
 
 frame = np.zeros((450,800,3), np.uint8)
 
@@ -53,7 +69,7 @@ frame0 = class_frame.frame([0,0], image=cube)
 
 upper_camera = np.zeros((200,266,3), np.uint8)
 upper_camera[:] = (255, 0, 255)
-frame1 = class_frame.frame([266,0], image=upper_camera)
+frame1 = class_frame.frame([266,0], action_to_get_image=get_current_and_resize_frame, parameters = cap1)
 
 upper_camera_special = np.zeros((200,266,3), np.uint8)
 upper_camera_special[:] = (0, 100, 255)
@@ -61,7 +77,7 @@ frame2 = class_frame.frame([532,0], image=upper_camera_special)
 
 lower_camera = np.zeros((200,266,3), np.uint8)
 lower_camera[:] = (255, 0, 10)
-frame3 = class_frame.frame([266,200], image=lower_camera)
+frame3 = class_frame.frame([266,200], action_to_get_image=get_current_and_resize_frame, parameters = cap)
 
 lower_camera_special = np.zeros((200,266,3), np.uint8)
 lower_camera_special[:] = (255, 100, 0)
@@ -121,16 +137,10 @@ def mouse_callback_2(event,x,y,flags,params):
 while True:
     ret, camera_frame0 = cap.read()
     ret, camera_frame1 = cap1.read()
-    #scale_percent = 13 # percent of original size
-    #width = int(camera_frame0.shape[1] * scale_percent / 100)
-    #height = int(camera_frame0.shape[0] * scale_percent / 100)
-    #dim = (width, height)
-    # resize image
-    #camera_frame0 = cv2.resize(camera_frame0, dim, interpolation = cv2.INTER_AREA)
     cv2.imshow('frame0', camera_frame0)
     cv2.imshow('frame1', camera_frame1)
-    cv2.imshow('solver', frame1)
-    #cv2.moveWindow('solver',1920,0)
+    cv2.imshow('solver', frame)
+    cv2.moveWindow('solver',1920,0)
     frame = np.zeros((450,800,3), np.uint8)
     for button in menus[current_button_set]['buttons']:
         frame = button.render(frame)
