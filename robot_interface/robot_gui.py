@@ -3,8 +3,7 @@ print('started')
 import cv2
 import time
 import numpy as np
-import class_button
-import class_frame
+import class_menus
 import random
 
 print('imported')
@@ -48,6 +47,8 @@ def set_menu(menu):
 def load_profile(profile_number):
     print('load_profile', profile_number)
 
+def change_menu(menu_name):
+    real_menus.set_current_menu(menu_name)
 
 def get_current_and_resize_frame(camera):
     ret, current_frame = camera.read()
@@ -58,73 +59,91 @@ def get_current_and_resize_frame(camera):
     current_frame = cv2.resize(current_frame, dim, interpolation = cv2.INTER_AREA)
     return current_frame
 
+frame0 = {'name':'', 'location':[0,0], 'image':, 'action_to_get_image':None , 'parameters':None}
+button1 = {'size':[50, 50], 'location':[0, 400],'color':'white', 'text_color':'black', 'text':'u', 'action':change_menu, 'parameters':'second'}
+main_menu = {'frames':[frame0], 'buttons':[button1, button2, button3]}
+menus = {'main':main_menu, 'second':second_menu}
+real_menus = class_menus.menus(menus, 'main')
+
 
 frame = np.zeros((450,800,3), np.uint8)
 
 cube = np.zeros((400,266,3), np.uint8)
 cube[:] = (255, 255, 255)
-frame0 = class_frame.frame([0,0], image=cube)
+frame0 = {([0,0], image=cube)}
 
-upper_camera = np.zeros((200,266,3), np.uint8)
-upper_camera[:] = (255, 0, 255)
-frame1 = class_frame.frame([266,0], action_to_get_image=get_current_and_resize_frame, parameters = cap1)
+
+camera_0_segment = {'name':'upper_camera', 'location':[226, 0], 'action_to_get_image':get_current_and_resize_framene , 'parameters':cap1}
 
 upper_camera_special = np.zeros((200,266,3), np.uint8)
 upper_camera_special[:] = (0, 100, 255)
-frame2 = class_frame.frame([532,0], image=upper_camera_special)
+camera_0_special_segment = {'name':'upper_camera_special', 'location':[532, 0], 'image':upper_camera_special}
 
-lower_camera = np.zeros((200,266,3), np.uint8)
-lower_camera[:] = (255, 0, 10)
-frame3 = class_frame.frame([266,200], action_to_get_image=get_current_and_resize_frame, parameters = cap)
+
+camera_1_segment = {'name':'', 'location':[266, 200], 'action_to_get_image':get_current_and_resize_frame , 'parameters':cap}
 
 lower_camera_special = np.zeros((200,266,3), np.uint8)
 lower_camera_special[:] = (255, 100, 0)
-frame4 = class_frame.frame([532,200], image=lower_camera_special)
+camera_1_special_segment = {'name':'lower_camera_special', 'location':[532, 200], 'image':lower_camera_special}
 
 calibration_polygons_upper = np.zeros((200,266,3), np.uint8)
 calibration_polygons_upper[:] = (255, 100, 0)
-frame5 = class_frame.frame([0,0], image=calibration_polygons_upper)
+calibrate_upper_polygons_segment = {'name':'calibration_polygons_upper', 'location':[0, 0], 'image':calibration_polygons_upper}
 
 calibration_polygons_lower = np.zeros((200,266,3), np.uint8)
 calibration_polygons_lower[:] = (0, 255, 0)
-frame6 = class_frame.frame([0,200], image=calibration_polygons_lower)
+calibrate_lower_polygons_segment = {'name':'calibration_polygons_lower', 'location':[0, 200], 'image':calibration_polygons_lower}
 
 calibration_colors = np.zeros((200,532,3), np.uint8)
 calibration_colors[:] = (0, 255, 255)
-frame7 = class_frame.frame([266, 0], image=calibration_colors)
+calibrate_colors_segment = {'name':'calibration_colors', 'location':[266, 0], 'image':calibration_colors}
 
 calibration_acceleration = np.zeros((200,532,3), np.uint8)
 calibration_acceleration[:] = (150, 10, 255)
-frame8 = class_frame.frame([266, 200], image=calibration_acceleration)
+frame7 = {'name':'calibration_acceleration', 'location':[266, 200], 'image':calibration_acceleration}
 
 pofile_1 = np.zeros((100,100,3), np.uint8)
 pofile_1[:] = (150, 10, 255)
-frame9 = class_frame.frame([0, 0], image=pofile_1)
+frame8 = {'name':'pofile_1', 'location':[0, 0], 'image':pofile_1}
 
 color = (100,5,255)
 current_button_set = 'main'
 
-button1 =class_button.button([50, 50], [0, 400], (255, 255, 255), (0, 0, 0), 'u', turn_side, parameters = 'u')
-button2 = class_button.button([50, 50], [50, 400], (0, 19, 235), (0, 0, 0),  'r', turn_side, parameters = 'r')
-button3 = class_button.button([50, 50], [100, 400], (0, 255, 10), (0, 0, 0),  'f', turn_side, parameters = 'f')
-button4 = class_button.button([50, 50], [150, 400], (66, 244, 235), (0, 0, 0),  'd', turn_side, parameters = 'd')
-button5 = class_button.button([50, 50], [200, 400], (255, 10, 0), (0, 0, 0),  'l', turn_side, parameters = 'l')
-button6 = class_button.button([50, 50], [250, 400], (0, 150, 255), (0, 0, 0),  'b', turn_side, parameters = 'b')
-button7 = class_button.button([100, 50], [300, 400], (255, 255, 255), (0, 0, 0),  'solve', solve)
-button8 = class_button.button([160, 50], [400, 400], (35, 60, 255), (0, 0, 0),  'scramble', scramble)
-button9 = class_button.button([160, 50], [560, 400], (255, 60, 0), (0, 0, 0),  'calibrate', set_menu, parameters = 'calibrate')
-button10 = class_button.button([160, 50], [720, 400], (0, 10, 255), (0, 0, 0),  'quit', initiate_quit)
+u_button = {'size':[50, 50], 'location':[0, 400],'color':'white', 'text_color':'black', 'text':'u', 'action':turn_side, 'parameters':'u'}
+
+r_button = {'size':[50, 50], 'location':[50, 400],'color':'red', 'text_color':'black', 'text':'r', 'action':turn_side, 'parameters':'r'}
+
+f_button = {'size':[50, 50], 'location':[100, 400],'color':'green', 'text_color':'black', 'text':'f', 'action':turn_side, 'parameters':'f'}
+
+d_button = {'size':[50, 50], 'location':[150, 400],'color':'yellow', 'text_color':'black', 'text':'d', 'action':turn_side, 'parameters':'d'}
+
+l_button = {'size':[50, 50], 'location':[200, 400],'color':'blue', 'text_color':'black', 'text':'l', 'action':turn_side, 'parameters':'l'}
+
+b_button = {'size':[50, 50], 'location':[250, 400],'color':'orange', 'text_color':'black', 'text':'b', 'action':turn_side, 'parameters':'b'}
+
+solve_button = {'size':[100, 50], 'location':[300, 400],'color':'white', 'text_color':'black', 'text':'solve', 'action':solve}
+
+scramble_button = {'size':[160, 50], 'location':[400, 400],'color':'yellow', 'text_color':'black', 'text':'scramble', 'action':scramble}
+
+calibrate_button = {'size':[160, 50], 'location':[560, 400],'color':'blue', 'text_color':'black', 'text':'calibrate', 'action':change_menu, 'parameters':'calibrate'}
+
+quit_button = {'size':[160, 50], 'location':[720, 400],'color':'red', 'text_color':'black', 'text':'quit', 'action':initiate_quit}
+
 main_menu = {'buttons':[button1, button2, button3, button4, button5, button6, button7, button8, button9, button10], 'frames':[frame0, frame1, frame2, frame3, frame4]}
 
-button11 = class_button.button([100, 50], [620, 400], (255, 255, 255), (0, 0, 0),  'back', set_menu, parameters = 'main')
-button12 = class_button.button([150, 50], [0, 400], (10, 20, 150), (0, 0, 0),  'polygons', set_menu, parameters = 'main')
-button13 = class_button.button([120, 50], [150, 400], (0, 255, 0), (255, 0, 0),  'colors', set_menu, parameters = 'main')
-button14 = class_button.button([210, 50], [270, 400], (255, 0, 0), (0, 0, 0),  'acceleration', set_menu, parameters = 'main')
-button15 = class_button.button([140, 50], [480, 400], (255, 150, 0), (0, 0, 0),  'profiles', set_menu, parameters = 'profiles')
+back_to_main_button = {'size':[100, 50], 'location':[620, 400],'color':'white', 'text_color':'black', 'text':'back', 'action':change_menu 'parameters':'main'}
+
+polygons_button = {'size':[100, 50], 'location':[620, 400],'color':'red', 'text_color':'white', 'text':'polygons', 'action':change_menu 'parameters':'main'}
+
+colors_button = {'size':[100, 50], 'location':[620, 400],'color':'green', 'text_color':'blue', 'text':'colors', 'action':change_menu 'parameters':'main'}
+
+acceleration_button = {'size':[210, 50], 'location':[270, 400],'color':'red', 'text_color':'black', 'text':'acceleration', 'action':change_menu 'parameters':'main'}
+
+profiles_button = {'size':[210, 50], 'location':[270, 400],'color':'yellow', 'text_color':'black', 'text':'profiles', 'action':change_menu 'parameters':'profiles'}
+
 calibrate_menu = {'buttons':[button15, button14, button13, button12, button11, button10], 'frames':[frame5, frame6, frame7, frame8]}
 
-
-button16 = class_button.button([100, 50], [620, 400], (255, 255, 255), (0, 0, 0),  'back', set_menu, parameters = 'calibrate')
+back_to_calibrate_button = {'size':[100, 50], 'location':[620, 400], 'color':'white', 'text_color':'black', 'text':'back', 'action':change_menu 'parameters':'calibrate'}
 profiles_menu = {'buttons':[button16, button10], 'frames':[frame9]}
 menus = {'main':main_menu, 'calibrate':calibrate_menu, 'profiles':profiles_menu}
 

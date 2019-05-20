@@ -1,22 +1,6 @@
-import cv2
-import numpy as np
 import class_button
 import class_frame
 
-
-#input for a button [50, 50], [0, 400], (255, 255, 255), (0, 0, 0), 'u', turn_side, parameters = 'u'
-
-#input for a frame [266,200], action_to_get_image=get_current_and_resize_frame, parameters = cap
-
-#init button self, size, location, color, text_color, text, action, parameters = None
-
-#init frame self, location, image = None, action_to_get_image = None, parameters = Non 
-
-# image = actucal photo from a camera
-
-# frame = the entire screen of the gui
-
-# segment = a part of a screen on the gui
 class menu:
     def __init__(self, frames, buttons):
 
@@ -32,6 +16,7 @@ class menu:
         for button in self.buttons:
             location = [cursor_x, cursor_y]
             button.update(location, mouse_code)
+
 
     def render(self, frame, new_frame_info):
         for segment in self.frames:
@@ -50,8 +35,6 @@ class menu:
 
         for button in self.buttons:
             frame = button.render(frame)
-
-
 
         return frame
 
