@@ -6,10 +6,22 @@ class menu:
 
         self.buttons = []
         for button in buttons:
-            self.buttons.append(class_button.button(button['size'], button['location'], button['color'], button['text_color'], button['text'], button['action'], parameters = button['parameters']))
+            if 'parameters' in button:
+                self.buttons.append(class_button.button(button['size'], button['location'], button['color'], button['text_color'], button['text'], button['action'],parameters = button['parameters']))
+            else:
+                self.buttons.append(class_button.button(button['size'], button['location'], button['color'], button['text_color'], button['text'], button['action']))
 
         self.frames = {}
         for frame in frames:
+            if not('parameters' in frame):
+                frame['parameters'] = None
+
+            if not('action_to_get_image' in frame):
+                frame['action_to_get_image'] = None
+            
+            if not('image' in frame):
+                frame['image'] = None
+
             self.frames[frame['name']] = class_frame.frame(frame['location'], image = frame['image'], action_to_get_image = frame['action_to_get_image'], parameters = frame['parameters'])
 
     def update(self, cursor_x, cursor_y, mouse_code):

@@ -75,7 +75,6 @@ def render_cube(position):
 
             point_1 = points[sticker[0]][int(sticker[1])-1]
             point_2 = [points[sticker[0]][int(sticker[1])-1][0] + 29 , points[sticker[0]][int(sticker[1])-1][1] + 29]
-            print (point_1, point_2, 'side' , faces_to_colors[side])
-            cv2.rectangle(frame, (point_1[0], point_1[1]) ,(point_2[0], point_2[1]), (0,0,0), -1)
-            cv2.rectangle(frame, (point_1[0]+2, point_1[1]+2) ,(point_2[0]-2, point_2[1]-2), faces_to_colors[side], -1)
+            cv2.rectangle(frame, (point_1[0], point_1[1] - 20) ,(point_2[0], point_2[1] - 20), (0,0,0), -1)
+            cv2.rectangle(frame, (point_1[0]+2, point_1[1] - 18) ,(point_2[0]-2, point_2[1] - 22), faces_to_colors[side], -1)
     return frame
