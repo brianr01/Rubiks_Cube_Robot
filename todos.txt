@@ -1,0 +1,4 @@
+create scramble function in virtual rubiks cube
+create a class to use the cameras
+adding acceleration curve to turn scripts
+add a convert to lab in visual recognitnion
