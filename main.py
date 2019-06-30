@@ -7,6 +7,7 @@ import cv2
 
 
 
+
 #adds robot interface to path
 sys.path.append(sys.path[0] + '/robot_interface')
 sys.path.append(sys.path[0] + '/turn_scripts')
@@ -16,16 +17,17 @@ sys.path.append(sys.path[0] + '/visual_recognition')
 
 import class_cube_detection_and_calibration
 import virtual_rubiks_cube
-#import class_cube TODO UNCOMMENT AND TEST FUNCTIONALITY WHEN HOOKED UP TO RASPBERRY PI
+import class_cube
 
 import class_robot_interface
-#import UseWebCam NEED TO REMAKE THIS MODULE OR FIND WORKING VERSION
+import UseWebCam
+
 
 class rubiks_cube_solving_robot:
     def __init__(self):
         
 
-        self.current_frame = [cv2.imread('frame.jpg'),cv2.imread('frame2.jpg')]
+        self.current_frame = UseWebCam.get_current_frames()
 
 
         self.virtual_rubiks_cube = virtual_rubiks_cube.Virtual_Cube()
@@ -57,40 +59,58 @@ class rubiks_cube_solving_robot:
         self.interface = class_robot_interface.robot_interface(interface_functions)
         self.quit = False
         self.visual_recognition.get_thresholds()
-        #self.turn_scripts = class_cube
+        
+        
+        motors_pins = {'r':[5, 3, 12],
+               'l':[11, 7, 36],
+               'u':[15, 13, 16], 
+               'd':[31, 29, 22], 
+               'f':[35, 33, 18], 
+               'b':[40, 37, 32]}
+        
+        self.turn_scripts = class_cube.Cube(motors_pins)
 
     def get_cube_state(self):
         return self.virtual_rubiks_cube.get_cube_state()
 
     def get_current_frame(self, camera_number):
-        frames = [cv2.imread('frame1.jpg'),cv2.imread('frame2.jpg')]
+        frames = UseWebCam.get_current_frames()
         return frames[int(camera_number)]
 
     def get_current_image_in_lab(self, camera_number):
-        frames = [cv2.imread('frame1.jpg'),cv2.imread('frame2.jpg')]
+        frames = UseWebCam.get_current_frames()
         frame = cv2.cvtColor(frames[int(camera_number)], cv2.COLOR_BGR2LAB)
         return frame
 
     def turn_side(self, move):
         self.virtual_rubiks_cube.execute_algorithm([move])
-        #self.turn_scripts.execute_algorithm([move])
+        self.turn_scripts.power_on()
+        self.turn_scripts.execute_algorithm(move)
+        self.turn_scripts.power_off()
 
     def solve(self):
         frame0 = self.get_current_frame(0)
         frame1 = self.get_current_frame(1)
-        cube_position = self.visual_recognition.get_colors(frame0, frame1)
-        print(cube_position)
-        #cube_position = self.virtual_rubiks_cube.get_cube_state()
-        self.virtual_rubiks_cube.cube_position = cube_position
+        #cube_position = self.visual_recognition.get_colors(frame0, frame1)
+        cube_position = self.virtual_rubiks_cube.get_cube_state()
+        #self.virtual_rubiks_cube.cube_position = cube_position
         solution = self.virtual_rubiks_cube.get_solution()
         self.virtual_rubiks_cube.execute_algorithm(solution)
-        #self.turn_scripts.execute_algorithm(solution)
+        
+        solution = self.virtual_rubiks_cube.convert_algorithm(solution)
+        
+        self.turn_scripts.power_on()
+        self.turn_scripts.execute_algorithm(solution)
+        self.turn_scripts.power_off()
 
     def scramble(self):
         #todo write scramble method in virtual rubiks cube scramble = self.virtual_rubiks_cube.get_scramble()
         scramble = self.virtual_rubiks_cube.get_scramble()
         self.virtual_rubiks_cube.execute_algorithm(scramble)
-        #todo test this in robot self.turn_scripts.execute_algorithm(scramble)
+        self.turn_scripts.power_on()
+        self.turn_scripts.execute_algorithm(scramble)
+        self.turn_scripts.power_off()
+
 
     def initiate_quit(self):
         print('end')

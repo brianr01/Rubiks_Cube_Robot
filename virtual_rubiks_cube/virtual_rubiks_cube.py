@@ -101,6 +101,35 @@ class Virtual_Cube:
                 else:
                     self.turn_side(algorithm[iteration].lower(), True)
                     break
+                
+    def convert_algorithm(self, algorithm):
+        move_list = len(algorithm)
+        iteration = 0
+        converted_moves = []
+        
+        while True:
+            if (iteration >= move_list):
+                break
+            if ( algorithm[iteration] == ' '):
+                iteration += 1
+            else:
+                if (iteration + 1 < move_list):
+                    if (algorithm[iteration + 1] == "'"):
+                        converted_moves.append(algorithm[iteration].lower())
+                        iteration += 3
+                    elif (algorithm[iteration + 1] == "2"):
+                        converted_moves.append(algorithm[iteration].lower())
+                        converted_moves.append(algorithm[iteration].lower())
+                        iteration += 3
+                    else:
+                        converted_moves.append(algorithm[iteration].upper())
+                        iteration += 2
+                else:
+                    converted_moves.append(algorithm[iteration].upper())
+                    break
+                
+        return converted_moves
+        
 
 
     def turn_side(self, face, direction_clockwise):

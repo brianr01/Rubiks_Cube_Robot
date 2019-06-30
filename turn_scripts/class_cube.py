@@ -1,20 +1,14 @@
 import class_motor
 
-motors_pins = {'r':[5, 3, 12],
-               'l':[11, 7, 36],
-               'u':[15, 13, 16], 
-               'd':[31, 29, 22], 
-               'f':[35, 33, 18], 
-               'b':[40, 37, 32]}
 
 opposite_side_dictionary = {'r':'l','l':'r','u':'d','d':'u','f':'b','b':'f'}                                                                      
 
 class Cube:
-    def __init__(self, motors_pins):
+    def __init__(self,motors_pins):
         self.sides = {}
         for pins in motors_pins:
-            self.sides[motor_pins] = class_motor.Motor(pins[motor_pins][0], pins[motor_pins][1], pins[motor_pins][2])
-    
+            self.sides[pins] = class_motor.Motor(motors_pins[pins][0], motors_pins[pins][1], motors_pins[pins][2])
+
     def execute_algorithm(self, algorithm):
         for move in algorithm:
             if move.islower():
@@ -25,7 +19,7 @@ class Cube:
                     self.sides[move.lower()].set_motor_direction(direction = False)
                     self.sides[move.lower()].turn_motor(200)
                 except Exception as error:
-                    print(error)
+                    print(error, ': error invalid move detected:', move)
                     
     def power_off(self):
         for motor in self.sides:
