@@ -215,6 +215,8 @@ class cube_detection_and_calibration:
                     polygon = polygons_sticker[polygon_type]
 
                     self.cube[side][sticker].set_polygon_points(polygon, polygon_type)
+                    
+    
 
         
     

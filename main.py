@@ -21,13 +21,13 @@ import virtual_rubiks_cube
 import class_cube
 
 import class_robot_interface
-#import UseWebCam
+import UseWebCam
 
 
 class rubiks_cube_solving_robot:
     def __init__(self):
-        #self.current_frame = UseWebCam.get_current_frames()
-        self.current_frame = [cv2.imread('frame1.jpg'), cv2.imread('frame2.jpg')]
+        self.current_frame = UseWebCam.get_current_frames()
+        #self.current_frame = [cv2.imread('frame1.jpg'), cv2.imread('frame2.jpg')]
 
 
         self.virtual_rubiks_cube = virtual_rubiks_cube.Virtual_Cube()
@@ -74,8 +74,8 @@ class rubiks_cube_solving_robot:
         return self.virtual_rubiks_cube.get_cube_state()
 
     def get_current_frame(self, camera_number):
-        #frames = UseWebCam.get_current_frames()
-        frames = [cv2.imread('frame1.jpg'), cv2.imread('frame2.jpg')]
+        frames = UseWebCam.get_current_frames()
+        #frames = [cv2.imread('frame1.jpg'), cv2.imread('frame2.jpg')]
         return frames[int(camera_number)]
 
     def get_current_image_in_lab(self, camera_number):
@@ -93,8 +93,8 @@ class rubiks_cube_solving_robot:
         start = timeit.default_timer()
         frame0 = self.get_current_frame(0)
         frame1 = self.get_current_frame(1)
-        #cube_position = self.visual_recognition.get_colors(frame0, frame1)
-        cube_position = self.virtual_rubiks_cube.get_cube_state()
+        cube_position = self.visual_recognition.get_colors(frame0, frame1)
+        #cube_position = self.virtual_rubiks_cube.get_cube_state()
         #self.virtual_rubiks_cube.cube_position = cube_position
         solution = self.virtual_rubiks_cube.get_solution()
         print(solution)
@@ -132,28 +132,33 @@ class rubiks_cube_solving_robot:
         return 1
 
     def calibrate_cube_colors(self):
+        print('started')
         side_to_camera_dict = {'b':1, 'u':1, 'r':1, 'f':0, 'd':0, 'l':0}
         calibrate_instructions = [{'moves':'',                    'sides':{'r':'r', 'l':'l', 'u':'u', 'd':'d', 'f':'f', 'b':'b'}},
 
                                   {'moves':"U D' L' R F B' U D'", 'sides':{'r':'u', 'l':'d', 'u':'f', 'd':'b', 'f':'r', 'b':'l'}},
                                   {'moves':"U D' L' R F B' U D'", 'sides':{'r':'f', 'l':'b', 'u':'r', 'd':'l', 'f':'u', 'b':'d'}},
 
-                                  {'moves':"U' D L R' F' B U' D", 'sides':{'r':'l', 'l':'r'                                    }},
-                                  {'moves':"U' D L R' F' B U' D", 'sides':{'r':'d', 'l':'u', 'u':'b', 'd':'f'                  }},
+                                  {'moves':"U' D L R' F B' U' D", 'sides':{'r':'l', 'l':'r'                                    }},
+                                  {'moves':"U' D L R' F B' U' D", 'sides':{'r':'d', 'l':'u', 'u':'b', 'd':'f'                  }},
 
                                   {'moves':"U D' L' R F B' U D'", 'sides':{'r':'b', 'l':'f',                   'f':'d', 'b':'u'}},
                                   {'moves':"U D' L' R F B' U D'", 'sides':{                  'u':'d', 'd':'u', 'f':'b', 'b':'f'}},
 
-                                  {'moves':"U' D L R' F' B U' D", 'sides':{                                    'f':'l', 'b':'r'}},
-                                  {'moves':"U' D L R' F' B U' D", 'sides':{                  'u':'l', 'd':'r'                  }}
+                                  {'moves':"U' D L R' F B' U' D", 'sides':{                                    'f':'l', 'b':'r'}},
+                                  {'moves':"U' D L R' F B' U' D", 'sides':{                  'u':'l', 'd':'r'                  }},
+                                  {'moves':"U' D L' R F' B U' D", 'sides':{                                                    }},
                                 ]
         for instruction in calibrate_instructions:
             moves = instruction['moves']
             sides = instruction['sides']
+            print('set')
             if (moves != ''):
-                #self.turn_scripts.execute_algorithm(moves)
+                self.turn_scripts.power_on()
+                self.turn_scripts.execute_algorithm(moves)
+                self.turn_scripts.power_off()
                 pass
-            
+            input('align the cube now')
             if (sides != {}):
                 for side in sides:
                     self.visual_recognition.calibrate_side(self.get_current_frame(side_to_camera_dict[side]), side, sides[side])

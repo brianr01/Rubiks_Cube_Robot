@@ -157,7 +157,7 @@ class Sticker_Detection_And_Calibration:
 
 
     def get_pixel_count_in_threshold(self, image, polygon_mask, lower_limit, upper_limit):
-        threshold_mask = cv2.inRange(image, lower_limit, upper_limit)
+        threshold_mask = cv2.inRange(image, (lower_limit[0], lower_limit[1], lower_limit[2]), (upper_limit[0], upper_limit[1], upper_limit[2]))
 
         #mask with only valid colors within the polygon 
         mask = cv2.bitwise_and(threshold_mask, polygon_mask)
