@@ -4,6 +4,7 @@ from os import path
 
 #todo remove import of cv2 when camera module works
 import cv2
+import timeit
 
 
 
@@ -89,23 +90,27 @@ class rubiks_cube_solving_robot:
         self.turn_scripts.power_off()
 
     def solve(self):
+        start = timeit.default_timer()
         frame0 = self.get_current_frame(0)
         frame1 = self.get_current_frame(1)
         #cube_position = self.visual_recognition.get_colors(frame0, frame1)
         cube_position = self.virtual_rubiks_cube.get_cube_state()
         #self.virtual_rubiks_cube.cube_position = cube_position
         solution = self.virtual_rubiks_cube.get_solution()
+        print(solution)
         self.virtual_rubiks_cube.execute_algorithm(solution)
         
-        solution = self.virtual_rubiks_cube.convert_algorithm(solution)
+        
+        #solution = self.virtual_rubiks_cube.convert_algorithm(solution)
         
         self.turn_scripts.power_on()
         self.turn_scripts.execute_algorithm(solution)
         self.turn_scripts.power_off()
+        print(timeit.default_timer() - start)
 
     def scramble(self):
         #todo write scramble method in virtual rubiks cube scramble = self.virtual_rubiks_cube.get_scramble()
-        scramble = self.virtual_rubiks_cube.get_scramble()
+        scramble = self.virtual_rubiks_cube.get_scramble(moves = 50)
         self.virtual_rubiks_cube.execute_algorithm(scramble)
         self.turn_scripts.power_on()
         self.turn_scripts.execute_algorithm(scramble)

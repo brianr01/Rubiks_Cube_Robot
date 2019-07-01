@@ -275,7 +275,7 @@ class Virtual_Cube:
         return self.cube_position
     
     def get_scramble(self, moves = 20):
-        possible_moves = "uUdDfFbBlLrR"
+        possible_moves = ["R ", "R' ", "L ", "L' ", "U ", "U' ", "D ", "D' ", "F ", "F' ", "B ", "B' "]
         scramble = ""
         for i in range(0,moves):
             scramble = scramble + possible_moves[random.randint(0,11)]

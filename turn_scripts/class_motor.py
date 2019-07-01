@@ -54,7 +54,7 @@ class Motor:
    
     def turn_motor(self, steps):      
         for step in range(0,steps):
-            sleep_time = .0005
+            sleep_time = .0003
             #TODO
             #make sleep time an acceleration curve
             time.sleep(sleep_time)
