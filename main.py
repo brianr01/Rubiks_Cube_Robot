@@ -27,7 +27,6 @@ import UseWebCam
 class rubiks_cube_solving_robot:
     def __init__(self):
         self.current_frame = UseWebCam.get_current_frames()
-        #self.current_frame = [cv2.imread('frame1.jpg'), cv2.imread('frame2.jpg')]
 
         self.virtual_rubiks_cube = virtual_rubiks_cube.Virtual_Cube()
         self.visual_recognition = class_cube_detection_and_calibration.cube_detection_and_calibration()
@@ -74,7 +73,7 @@ class rubiks_cube_solving_robot:
 
     def get_current_frame(self, camera_number):
         frames = UseWebCam.get_current_frames()
-        #frames = [cv2.imread('frame1.jpg'), cv2.imread('frame2.jpg')]
+
         return frames[int(camera_number)]
 
     def get_current_image_in_lab(self, camera_number):
@@ -147,6 +146,7 @@ class rubiks_cube_solving_robot:
                                   {'moves':"U' D L R' F B' U' D", 'sides':{                                    'f':'l', 'b':'r'}},
                                   {'moves':"U' D L R' F B' U' D", 'sides':{                  'u':'l', 'd':'r'                  }},
                                   {'moves':"U' D L' R F' B U' D", 'sides':{                                                    }}                 ]
+
         for instruction in calibrate_instructions:
             moves = instruction['moves']
             sides = instruction['sides']
