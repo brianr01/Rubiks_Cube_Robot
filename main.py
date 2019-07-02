@@ -93,8 +93,8 @@ class rubiks_cube_solving_robot:
         start = timeit.default_timer()
         frame0 = self.get_current_frame(0)
         frame1 = self.get_current_frame(1)
-        cube_position = self.visual_recognition.get_colors(frame0, frame1)
-        #cube_position = self.virtual_rubiks_cube.get_cube_state()
+        #cube_position = self.visual_recognition.get_colors(frame0, frame1)
+        cube_position = self.virtual_rubiks_cube.get_cube_state()
         #self.virtual_rubiks_cube.cube_position = cube_position
         solution = self.virtual_rubiks_cube.get_solution()
         print(solution)

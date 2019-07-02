@@ -36,13 +36,6 @@ class colors_menu():
                                     'action':external_functions['change_menu'],
                                     'parameters':'calibrate'}
         
-        save = {'size':[100, 50],
-                                    'location':[600, 350],
-                                    'color':'blue',
-                                    'text_color':'black',
-                                    'text':'back',
-                                    'action':external_functions['change_menu'],
-                                    'parameters':'calibrate'}
 
         calibrate = {'size':[160, 50],
                      'location':[540, 400],
