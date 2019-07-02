@@ -26,8 +26,14 @@ import UseWebCam
 
 class rubiks_cube_solving_robot:
     def __init__(self):
+<<<<<<< HEAD
         self.current_frame = UseWebCam.get_current_frames()
         #self.current_frame = [cv2.imread('frame1.jpg'), cv2.imread('frame2.jpg')]
+=======
+        
+
+        self.current_frame = UseWebCam.get_current_frames()
+>>>>>>> parent of a529e2f... fixed calibration instruction set
 
 
         self.virtual_rubiks_cube = virtual_rubiks_cube.Virtual_Cube()
@@ -75,12 +81,15 @@ class rubiks_cube_solving_robot:
 
     def get_current_frame(self, camera_number):
         frames = UseWebCam.get_current_frames()
+<<<<<<< HEAD
         #frames = [cv2.imread('frame1.jpg'), cv2.imread('frame2.jpg')]
+=======
+>>>>>>> parent of a529e2f... fixed calibration instruction set
         return frames[int(camera_number)]
 
     def get_current_image_in_lab(self, camera_number):
-        frame = self.get_current_frame(camera_number)
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
+        frames = UseWebCam.get_current_frames()
+        frame = cv2.cvtColor(frames[int(camera_number)], cv2.COLOR_BGR2LAB)
         return frame
 
     def turn_side(self, move):
@@ -134,6 +143,7 @@ class rubiks_cube_solving_robot:
     def calibrate_cube_colors(self):
         print('started')
         side_to_camera_dict = {'b':1, 'u':1, 'r':1, 'f':0, 'd':0, 'l':0}
+<<<<<<< HEAD
         calibrate_instructions = [{'moves':'',                    'sides':{'r':'r', 'l':'l', 'u':'u', 'd':'d', 'f':'f', 'b':'b'}},
 
                                   {'moves':"U D' L' R F B' U D'", 'sides':{'r':'u', 'l':'d', 'u':'f', 'd':'b', 'f':'r', 'b':'l'}},
@@ -148,6 +158,14 @@ class rubiks_cube_solving_robot:
                                   {'moves':"U' D L R' F B' U' D", 'sides':{                                    'f':'l', 'b':'r'}},
                                   {'moves':"U' D L R' F B' U' D", 'sides':{                  'u':'l', 'd':'r'                  }},
                                   {'moves':"U' D L' R F' B U' D", 'sides':{                                                    }},
+=======
+        calibrate_instructions = [{'moves':'',       'sides':{'r':'r', 'l':'r', 'u':'r', 'd':'r', 'f':'r', 'b':'r'}},
+                                  {'moves':'',       'sides':{'r':'l', 'l':'l', 'u':'l', 'd':'l', 'f':'l', 'b':'l'}},
+                                  {'moves':'',       'sides':{'r':'u', 'l':'u', 'u':'u', 'd':'u', 'f':'u', 'b':'f'}},
+                                  {'moves':'',       'sides':{'r':'d', 'l':'d', 'u':'d', 'd':'d', 'f':'d', 'b':'b'}},
+                                  {'moves':'',       'sides':{'r':'f', 'l':'f', 'u':'f', 'd':'f', 'f':'f', 'b':'u'}},
+                                  {'moves':'',       'sides':{'r':'b', 'l':'b', 'u':'b', 'd':'b', 'f':'b', 'b':'d'}},
+>>>>>>> parent of a529e2f... fixed calibration instruction set
                                 ]
         for instruction in calibrate_instructions:
             moves = instruction['moves']
