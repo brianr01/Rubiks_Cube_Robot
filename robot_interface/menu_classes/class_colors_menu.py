@@ -35,21 +35,20 @@ class colors_menu():
                                     'text':'back',
                                     'action':external_functions['change_menu'],
                                     'parameters':'calibrate'}
-        
+
         save = {'size':[100, 50],
                 'location':[500, 350],
                 'color':'red',
                 'text_color':'black',
                 'text':'save',
                 'action':external_functions['save_visual_recognition_colors']}
-        
+
         load = {'size':[100, 50],
                 'location':[600, 350],
                 'color':'orange',
                 'text_color':'black',
                 'text':'load',
                 'action':external_functions['load_visual_recognition_colors']}
-        
 
         calibrate = {'size':[160, 50],
                      'location':[540, 400],
@@ -81,6 +80,3 @@ class colors_menu():
                 self.new_frame = cv2.fillConvexPoly(self.new_frame, polygon, (255,255,255), 10)
                 self.new_frame = cv2.polylines(self.new_frame, polygon, True, (90,255,0), 5)
         return self.new_frame
-
-
-     

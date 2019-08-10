@@ -60,15 +60,15 @@ class rubiks_cube_solving_robot:
         self.interface = class_robot_interface.robot_interface(interface_functions)
         self.quit = False
         self.visual_recognition.get_thresholds()
-        
-        
+
+
         motors_pins = {'r':[5, 3, 12],
                'l':[11, 7, 36],
-               'u':[15, 13, 16], 
-               'd':[31, 29, 22], 
-               'f':[35, 33, 18], 
+               'u':[15, 13, 16],
+               'd':[31, 29, 22],
+               'f':[35, 33, 18],
                'b':[40, 37, 32]}
-        
+
         self.turn_scripts = class_cube.Cube(motors_pins)
 
     def get_cube_state(self):
@@ -100,10 +100,10 @@ class rubiks_cube_solving_robot:
         solution = self.virtual_rubiks_cube.get_solution()
         print(solution)
         self.virtual_rubiks_cube.execute_algorithm(solution)
-        
-        
+
+
         #solution = self.virtual_rubiks_cube.convert_algorithm(solution)
-        
+
         self.turn_scripts.power_on()
         self.turn_scripts.execute_algorithm(solution)
         self.turn_scripts.power_off()
@@ -124,10 +124,10 @@ class rubiks_cube_solving_robot:
 
     def render(self):
         return self.interface.render()
-    
+
     def update(self, event, cursor_y, cursor_x, flag, flag2):
         self.interface.update(cursor_x, cursor_y, event)
-    
+
     def get_acceleration_calibration(self):
         #todo create acceleration calibration function in turn scrips
         return 1
@@ -165,7 +165,7 @@ class rubiks_cube_solving_robot:
                 for side in sides:
                     self.visual_recognition.calibrate_side(self.get_current_frame(side_to_camera_dict[side]), side, sides[side])
         print ('done')
-    
+
 robot = rubiks_cube_solving_robot()
 while True:
     cv2.imshow('frame', robot.render())
