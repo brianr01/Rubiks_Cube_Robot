@@ -5,6 +5,7 @@ from os import path
 #todo remove import of cv2 when camera module works
 import cv2
 import timeit
+import time
 
 
 
@@ -51,8 +52,10 @@ class rubiks_cube_solving_robot:
                                'get_current_polygon_address':self.visual_recognition.get_current_polygon_address,
                                'calibrate_cube_colors':self.calibrate_cube_colors,
                                'get_colors_calibration':self.visual_recognition.get_thresholds,
-                               'save_visual_recognition':self.visual_recognition.save_polygons,
-                               'load_visual_recognition':self.visual_recognition.load_polygons}
+                               'save_visual_recognition_polygons':self.visual_recognition.save_polygons,
+                               'load_visual_recognition_polygons':self.visual_recognition.load_polygons,
+                               'save_visual_recognition_colors':self.visual_recognition.save_colors,
+                               'load_visual_recognition_colors':self.visual_recognition.load_colors}
 
         self.interface = class_robot_interface.robot_interface(interface_functions)
         self.quit = False
@@ -93,7 +96,7 @@ class rubiks_cube_solving_robot:
         frame1 = self.get_current_frame(1)
         #cube_position = self.visual_recognition.get_colors(frame0, frame1)
         cube_position = self.virtual_rubiks_cube.get_cube_state()
-        #self.virtual_rubiks_cube.cube_position = cube_position
+        self.virtual_rubiks_cube.cube_position = cube_position
         solution = self.virtual_rubiks_cube.get_solution()
         print(solution)
         self.virtual_rubiks_cube.execute_algorithm(solution)
@@ -154,6 +157,7 @@ class rubiks_cube_solving_robot:
             if (moves != ''):
                 self.turn_scripts.power_on()
                 self.turn_scripts.execute_algorithm(moves)
+                time.sleep(.5)
                 self.turn_scripts.power_off()
                 pass
             input('align the cube now')
@@ -165,8 +169,8 @@ class rubiks_cube_solving_robot:
 robot = rubiks_cube_solving_robot()
 while True:
     cv2.imshow('frame', robot.render())
-    #cv2.moveWindow('frame',1920,0)
     cv2.setMouseCallback('frame', robot.update)
+    cv2.moveWindow('frame', 0,0)
     if cv2.waitKey(1) & 0xFF == ord('q') or robot.quit:
         break
 

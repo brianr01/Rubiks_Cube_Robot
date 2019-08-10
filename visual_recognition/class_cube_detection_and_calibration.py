@@ -178,7 +178,13 @@ class cube_detection_and_calibration:
                     thresholds_to_add = {'lower_limit': lower_limit, 'upper_limit':upper_limit}
                     thresholds[side][color].append(thresholds_to_add)
         return thresholds
-
+    
+    def set_thresholds(self, thresholds):
+        side_order = ['r', 'l', 'u','d', 'f','b']
+        for side in side_order:
+            for sticker_number in range(1,10):
+                for color in side_order:
+                    self.cube[side][color].thresholds = thresholds[side][color]
 
     def save_polygons(self):
         polygon_types = ['calibration','standard']
@@ -215,6 +221,19 @@ class cube_detection_and_calibration:
                     polygon = polygons_sticker[polygon_type]
 
                     self.cube[side][sticker].set_polygon_points(polygon, polygon_type)
+    
+    def save_colors(self):
+        thresholds = self.get_thresholds()
+
+        #saves var polygons in polygon_saves.p
+        pickle.dump(thresholds, open( "colors_save.p", "wb" ))
+
+
+    def load_colors(self):
+        #loads save file
+        thesholds = pickle.load(open( "colors_save.p", "rb" ))
+
+        self.set_thresholds(thesholds)
                     
     
 

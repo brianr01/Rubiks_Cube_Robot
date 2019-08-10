@@ -124,14 +124,14 @@ class polygons_menu():
                        'color':'yellow',
                        'text_color':'black',
                        'text':'S',
-                       'action':external_functions['save_visual_recognition']}
+                       'action':external_functions['save_visual_recognition_polygons']}
 
         load_button = {'size':[50, 50],
                        'location':[700, 150],
                        'color':'orange',
                        'text_color':'black',
                        'text':'L',
-                       'action':external_functions['load_visual_recognition']}
+                       'action':external_functions['load_visual_recognition_polygons']}
 
         reset_all_button = {'size':[100, 50],
                             'location':[700, 200],

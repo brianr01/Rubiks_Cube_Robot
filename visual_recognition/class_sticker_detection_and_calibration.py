@@ -96,7 +96,7 @@ class Sticker_Detection_And_Calibration:
 
 
     def get_threshold_with_pixels(self, pixels):
-        thresholds = {'lower_limit':[255,128,128], 'upper_limit':[0, -128, -128]}
+        thresholds = {'lower_limit':[255,255,255], 'upper_limit':[0, 0, 0]}
         for pixel in pixels:
             #coordinate_type example = (coordinate_type_0, coordinate_type_1, coordinate_type_2) -> (L, A, B) -> (100, 230, 19)
             for color_space_type in range(0,3):
@@ -131,9 +131,11 @@ class Sticker_Detection_And_Calibration:
 
         while (iterations <= max_iterations):
             iterations += 1
+            print(iterations)
 
             #does a color have enough pixels to make a good guess at what the color is? if so break
             if (self.is_value_in_dictionary_over_x(pixel_counts, min_pixels)):
+                print('break')
                 break
 
             

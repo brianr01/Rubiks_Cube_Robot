@@ -123,9 +123,9 @@ class calibration_menu():
 
     def convert_color_from_lab_to_bgr(self, color):
         input = color
-        color = np.uint8([[color]])
-        color = cv2.cvtColor(color, cv2.COLOR_LAB2BGR)
-        color = (int(color[0][0][0]), int(color[0][0][1]), int(color[0][0][2]))
+        input = np.uint8([[input]])
+        input = cv2.cvtColor(input, cv2.COLOR_LAB2BGR)
+        input = (int(input[0][0][0]), int(input[0][0][1]), int(input[0][0][2]))
         return color
 
 
@@ -156,9 +156,11 @@ class calibration_menu():
                     upper_limit = cv2.cvtColor( np.uint8([[upper_limit_b]]) , cv2.COLOR_LAB2BGR)[0][0]
 
                     lower_limit = cv2.cvtColor( np.uint8([[lower_limit_b]]) , cv2.COLOR_LAB2BGR)[0][0]
+                    upper_limit = (int(upper_limit[0]), int(upper_limit[1]), int(upper_limit[2]))
+                    lower_limit = (int(lower_limit[0]), int(lower_limit[1]), int(lower_limit[2]))
                     
                     cv2.rectangle(image, (x_current, y_current), (x_current + 10, y_current + 10) , upper_limit, -1)
-                    cv2.rectangle(image, (x_current+6, y_current), (x_current + 12, y_current+10), lower_limit, -1)
+                    cv2.rectangle(image, (x_current+6, y_current), (x_current + 12, y_current+10),  lower_limit, -1)
                     
                     y_current += y_width
 

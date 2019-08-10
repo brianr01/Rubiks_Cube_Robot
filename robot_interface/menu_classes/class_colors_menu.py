@@ -36,6 +36,20 @@ class colors_menu():
                                     'action':external_functions['change_menu'],
                                     'parameters':'calibrate'}
         
+        save = {'size':[100, 50],
+                'location':[500, 350],
+                'color':'red',
+                'text_color':'black',
+                'text':'save',
+                'action':external_functions['save_visual_recognition_colors']}
+        
+        load = {'size':[100, 50],
+                'location':[600, 350],
+                'color':'orange',
+                'text_color':'black',
+                'text':'load',
+                'action':external_functions['load_visual_recognition_colors']}
+        
 
         calibrate = {'size':[160, 50],
                      'location':[540, 400],
@@ -51,7 +65,7 @@ class colors_menu():
                                     'text':'quit',
                                     'action':external_functions['initiate_quit']}
 
-        colors_menu = {'buttons':[back_to_calibrate_button, quit_button, calibrate], 'frames':[lower_polygons_segment, upper_polygons__segment]}
+        colors_menu = {'buttons':[back_to_calibrate_button, quit_button, calibrate, save, load], 'frames':[lower_polygons_segment, upper_polygons__segment]}
 
 
         self.menu = colors_menu
