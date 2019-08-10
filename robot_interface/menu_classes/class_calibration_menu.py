@@ -3,6 +3,7 @@ from os import path
 import numpy as np
 import cv2
 import random
+import pprint
 #adds images to working directory
 sys.path.append(sys.path[0] + '/images')
 current_directory = sys.path[0]
@@ -14,7 +15,7 @@ sys.path.append(parent_directory)
 #external functions needed get_cube_position, get_current_frame, get_current_image_in_lab, turn_side, solve, scramble, change_menu, initiate_quit
 class calibration_menu():
     def __init__(self, external_functions):
-
+        self.print = True
         #frames
         calibrate_upper_polygons_segment = {'name':'calibrate_upper_polygons',
                                        'location':[0, 0],
@@ -131,6 +132,9 @@ class calibration_menu():
 
     def render_colors_calibration(self, parameters, height =  200, width = 532):
         cube_colors = parameters['get_colors_function']()
+        if self.print == True:
+            self.print = False
+            pprint.PrettyPrinter(indent=2).pprint(cube_colors)
         image = np.zeros((height, width, 3),  np.uint8)
         image[:] = (100, 100, 100)
         
@@ -139,7 +143,7 @@ class calibration_menu():
         y_width = int(x_width * 1.6)
 
         x_current = int((532 % 36)/6)
-
+        
         for face in cube_colors:
             cube_faces = cube_colors[face]
 
@@ -150,12 +154,12 @@ class calibration_menu():
                 for sticker in range(0, len(cube_side)):
                     limit = cube_side[sticker]
 
-                    upper_limit_b = limit['upper_limit']
-                    lower_limit_b = limit['lower_limit']
+                    upper_limit = limit['upper_limit']
+                    lower_limit = limit['lower_limit']
 
-                    upper_limit = cv2.cvtColor( np.uint8([[upper_limit_b]]) , cv2.COLOR_LAB2BGR)[0][0]
-
-                    lower_limit = cv2.cvtColor( np.uint8([[lower_limit_b]]) , cv2.COLOR_LAB2BGR)[0][0]
+##                    upper_limit = cv2.cvtColor( np.uint8([[upper_limit_b]]) , cv2.COLOR_LAB2BGR)[0][0]
+##
+##                    lower_limit = cv2.cvtColor( np.uint8([[lower_limit_b]]) , cv2.COLOR_LAB2BGR)[0][0]
                     upper_limit = (int(upper_limit[0]), int(upper_limit[1]), int(upper_limit[2]))
                     lower_limit = (int(lower_limit[0]), int(lower_limit[1]), int(lower_limit[2]))
                     

@@ -70,6 +70,9 @@ class rubiks_cube_solving_robot:
                'b':[40, 37, 32]}
 
         self.turn_scripts = class_cube.Cube(motors_pins)
+        self.current_calibration_step = 0
+        #can be none, pause, or continue
+        self.current_calibration_action = 'none'
 
     def get_cube_state(self):
         return self.virtual_rubiks_cube.get_cube_state()
@@ -148,22 +151,36 @@ class rubiks_cube_solving_robot:
 
                                   {'moves':"U' D L R' F B' U' D", 'sides':{                                    'f':'l', 'b':'r'}},
                                   {'moves':"U' D L R' F B' U' D", 'sides':{                  'u':'l', 'd':'r'                  }},
-                                  {'moves':"U' D L' R F' B U' D", 'sides':{                                                    }}                 ]
+                                  {'moves':"U' D L' R F' B U' D", 'sides':{                                                    }}]
 
-        for instruction in calibrate_instructions:
-            moves = instruction['moves']
-            sides = instruction['sides']
-            print('set')
-            if (moves != ''):
-                self.turn_scripts.power_on()
-                self.turn_scripts.execute_algorithm(moves)
-                time.sleep(.5)
-                self.turn_scripts.power_off()
-                pass
-            input('align the cube now')
+        if self.current_calibration_action == 'none':
+            sides = calibrate_instructions[0]['sides']
             if (sides != {}):
                 for side in sides:
                     self.visual_recognition.calibrate_side(self.get_current_frame(side_to_camera_dict[side]), side, sides[side])
+                    
+            self.current_calibration_step += 1
+            self.current_calibration_action = 'continue'
+        
+        elif self.current_calibration_action == 'continue':
+            moves = calibrate_instructions[self.current_calibration_step]['moves']
+            self.turn_scripts.power_on()
+            self.turn_scripts.execute_algorithm(moves)
+            self.virtual_rubiks_cube.execute_algorithm(moves)
+            time.sleep(.5)
+            self.turn_scripts.power_off()
+            sides = calibrate_instructions[self.current_calibration_step]['sides']
+            if (sides != {}):
+                for side in sides:
+                    self.visual_recognition.calibrate_side(self.get_current_frame(side_to_camera_dict[side]), side, sides[side])
+                    
+            self.current_calibration_step += 1
+            self.current_calibration_action = 'continue'
+        else:
+            raise Exception('The "current_color_calibration_action" expected "none", "paused", or "continue" but it was' + str(self.current_calibration_action))
+        
+        if self.current_calibration_step >= len(calibrate_instructions):
+            self.current_calibration_step = 0
         print ('done')
 
 robot = rubiks_cube_solving_robot()

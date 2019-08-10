@@ -234,6 +234,7 @@ class cube_detection_and_calibration:
         thesholds = pickle.load(open( "colors_save.p", "rb" ))
 
         self.set_thresholds(thesholds)
+        
                     
     
 
