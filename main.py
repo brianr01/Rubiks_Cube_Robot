@@ -138,46 +138,52 @@ class rubiks_cube_solving_robot:
     def calibrate_cube_colors(self):
         print('started')
         side_to_camera_dict = {'b':1, 'u':1, 'r':1, 'f':0, 'd':0, 'l':0}
-        calibrate_instructions = [{'moves':'',                    'sides':{'r':'f', 'l':'l', 'u':'u', 'd':'d', 'f':'f', 'b':'b'}},
+##        calibrate_instructions = [{'moves':'',                    'sides':{'r':'f', 'l':'l', 'u':'u', 'd':'d', 'f':'f', 'b':'b'}},
+##
+##                                  {'moves':"U D' L' R F B' U D'", 'sides':{'r':'u', 'l':'d', 'u':'f', 'd':'b', 'f':'r', 'b':'l'}},
+##                                  {'moves':"U D' L' R F B' U D'", 'sides':{'r':'f', 'l':'b', 'u':'r', 'd':'l', 'f':'u', 'b':'d'}},
+##
+##                                  {'moves':"U' D L R' F B' U' D", 'sides':{'r':'l', 'l':'r'                                    }},
+##                                  {'moves':"U' D L R' F B' U' D", 'sides':{'r':'d', 'l':'u', 'u':'d', 'd':'f'                  }},
+##
+##                                  {'moves':"U D' L' R F B' U D'", 'sides':{'r':'b', 'l':'f',                   'f':'d', 'b':'u'}},
+##                                  {'moves':"U D' L' R F B' U D'", 'sides':{                  'u':'l', 'd':'u', 'f':'b', 'b':'f'}},
+##
+##                                  {'moves':"U' D L R' F B' U' D", 'sides':{                                    'f':'l', 'b':'r'}},
+##                                  {'moves':"U' D L R' F B' U' D", 'sides':{                  'u':'b', 'd':'r'                  }},
+##                                  {'moves':"U' D L' R F' B U' D", 'sides':{                                                    }}]
+        calibrate_instructions = [{'moves':'',                    'sides':{'u':'u'}},
 
-                                  {'moves':"U D' L' R F B' U D'", 'sides':{'r':'u', 'l':'d', 'u':'f', 'd':'b', 'f':'r', 'b':'l'}},
-                                  {'moves':"U D' L' R F B' U D'", 'sides':{'r':'f', 'l':'b', 'u':'r', 'd':'l', 'f':'u', 'b':'d'}},
+                                  {'moves':"U D' L' R F B' U D'", 'sides':{'u':'f'}},
+                                  {'moves':"U D' L' R F B' U D'", 'sides':{'u':'r'}},
 
-                                  {'moves':"U' D L R' F B' U' D", 'sides':{'r':'l', 'l':'r'                                    }},
-                                  {'moves':"U' D L R' F B' U' D", 'sides':{'r':'d', 'l':'u', 'u':'b', 'd':'f'                  }},
+                                  {'moves':"U' D L R' F B' U' D", 'sides':{'u':'r'}},
+                                  {'moves':"U' D L R' F B' U' D", 'sides':{'u':'d'}},
 
-                                  {'moves':"U D' L' R F B' U D'", 'sides':{'r':'b', 'l':'f',                   'f':'d', 'b':'u'}},
-                                  {'moves':"U D' L' R F B' U D'", 'sides':{                  'u':'d', 'd':'u', 'f':'b', 'b':'f'}},
+                                  {'moves':"U D' L' R F B' U D'", 'sides':{}},
+                                  {'moves':"U D' L' R F B' U D'", 'sides':{'u':'l'}},
 
-                                  {'moves':"U' D L R' F B' U' D", 'sides':{                                    'f':'l', 'b':'r'}},
-                                  {'moves':"U' D L R' F B' U' D", 'sides':{                  'u':'l', 'd':'r'                  }},
-                                  {'moves':"U' D L' R F' B U' D", 'sides':{                                                    }}]
-
-        if self.current_calibration_action == 'none':
-            sides = calibrate_instructions[0]['sides']
-            if (sides != {}):
-                for side in sides:
-                    self.visual_recognition.calibrate_side(self.get_current_frame(side_to_camera_dict[side]), side, sides[side])
-                    
-            self.current_calibration_step += 1
-            self.current_calibration_action = 'continue'
+                                  {'moves':"U' D L R' F B' U' D", 'sides':{}},
+                                  {'moves':"U' D L R' F B' U' D", 'sides':{'u':'b'}},
+                                  {'moves':"U' D L' R F' B U' D", 'sides':{}}]
+                
+        sides = calibrate_instructions[self.current_calibration_step]['sides']
+        if (sides != {}):
+            for side in sides:
+                self.visual_recognition.calibrate_side(self.get_current_frame(side_to_camera_dict[side]), side, sides[side])
+                
+        self.current_calibration_step += 1
         
-        elif self.current_calibration_action == 'continue':
-            moves = calibrate_instructions[self.current_calibration_step]['moves']
-            self.turn_scripts.power_on()
-            self.turn_scripts.execute_algorithm(moves)
-            self.virtual_rubiks_cube.execute_algorithm(moves)
-            time.sleep(.5)
-            self.turn_scripts.power_off()
-            sides = calibrate_instructions[self.current_calibration_step]['sides']
-            if (sides != {}):
-                for side in sides:
-                    self.visual_recognition.calibrate_side(self.get_current_frame(side_to_camera_dict[side]), side, sides[side])
-                    
-            self.current_calibration_step += 1
-            self.current_calibration_action = 'continue'
-        else:
-            raise Exception('The "current_color_calibration_action" expected "none", "paused", or "continue" but it was' + str(self.current_calibration_action))
+
+        moves = calibrate_instructions[self.current_calibration_step]['moves']
+        self.turn_scripts.power_on()
+        self.turn_scripts.execute_algorithm(moves)
+        self.virtual_rubiks_cube.execute_algorithm(moves)
+        time.sleep(.5)
+        self.turn_scripts.power_off()
+        
+        
+
         
         if self.current_calibration_step >= len(calibrate_instructions):
             self.current_calibration_step = 0
