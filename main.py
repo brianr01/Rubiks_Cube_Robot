@@ -138,7 +138,7 @@ class rubiks_cube_solving_robot:
     def calibrate_cube_colors(self):
         print('started')
         side_to_camera_dict = {'b':1, 'u':1, 'r':1, 'f':0, 'd':0, 'l':0}
-        calibrate_instructions = [{'moves':'',                    'sides':{'r':'r', 'l':'l', 'u':'u', 'd':'d', 'f':'f', 'b':'b'}},
+        calibrate_instructions = [{'moves':'',                    'sides':{'r':'f', 'l':'l', 'u':'u', 'd':'d', 'f':'f', 'b':'b'}},
 
                                   {'moves':"U D' L' R F B' U D'", 'sides':{'r':'u', 'l':'d', 'u':'f', 'd':'b', 'f':'r', 'b':'l'}},
                                   {'moves':"U D' L' R F B' U D'", 'sides':{'r':'f', 'l':'b', 'u':'r', 'd':'l', 'f':'u', 'b':'d'}},

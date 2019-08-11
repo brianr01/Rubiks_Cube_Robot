@@ -132,9 +132,6 @@ class calibration_menu():
 
     def render_colors_calibration(self, parameters, height =  200, width = 532):
         cube_colors = parameters['get_colors_function']()
-        if self.print == True:
-            self.print = False
-            pprint.PrettyPrinter(indent=2).pprint(cube_colors)
         image = np.zeros((height, width, 3),  np.uint8)
         image[:] = (100, 100, 100)
         
