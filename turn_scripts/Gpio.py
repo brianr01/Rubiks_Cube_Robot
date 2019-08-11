@@ -3,7 +3,7 @@
 #Tries to import RPi.GPIO. If this fails it allows the program to continue without them.
 use_gpio = True
 try:
-    import RefaPi.GPIO as GPIO
+    import RPi.GPIO as GPIO
 except Exception as error:
     print('failed to setup GPIO pins.')
     use_gpio = False
