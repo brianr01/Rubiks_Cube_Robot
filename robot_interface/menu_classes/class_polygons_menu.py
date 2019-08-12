@@ -73,7 +73,7 @@ class polygons_menu():
 
         polygon_calibration_segment = {'name':'polygon_calibration_segment',
                                        'location':[0, 0],
-                                       'size':[700,450],
+                                       'size':[390,390],
                                        'action_to_get_image':self.draw_polygons,
                                        'parameters':{'current_frame_function':external_functions['get_current_frame'], 'polygons_function':external_functions['get_polygon_points'], 'current_camera_number':external_functions['get_current_camera_number']},
                                        'action_on_event':self.add_polygon}
