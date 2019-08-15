@@ -47,7 +47,7 @@ class frame_manager:
         elif (frame.shape[0] < self.size[1] + y_offset):
             raise Exception("The image went outside the bottom of the frame.")
             return frame
-        
+
         elif (0 > y_offset):
             raise Exception("The image went outside the top of the frame.")
             return frame
@@ -59,30 +59,26 @@ class frame_manager:
 
     def update(self, location, event):
         if (not(self.action_on_event is None)):
-            
+
             x = location[0] - self.location[0]
             y = location[1] - self.location[1]
             #print(self.image.shape)
             if (x >= 0 and y >= 0) and (x <= self.resized_image.shape[1] and y <= self.resized_image.shape[0]):
-                self.action_on_event(math.floor(x/self.scale_factor),math.floor(y/self.scale_factor),event)
+                self.action_on_event(math.floor(x*self.scale_factor),math.floor(y*self.scale_factor),event)
 
     def image_resize(self, image, size):
         width = size[0]
-        height = size[1]        
+        height = size[1]
         (h, w) = image.shape[:2]
-        ratio = width/height
-        if (ratio != 0):
-            if (float(float(width)/ratio) >= float(float(height)/ratio)):
-                r = height / float(h)
-                dim = (int(w * r), height)
-            else:
-                r = width / float(w)
-                dim = (width, int(h * r))
-            self.scale_factor = r
-            #cv2.imshow('frame', image)
-            #cv2.waitKey(0)
-            resized = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
+        if (w >= h):
+            ratio = float(float(w)/float(h))
+            dim = (height, int(height / ratio))
+            self.scale_factor = ratio
+        else:
+            ratio = float(float(h)/float(w))
+            dim = (int(width / ratio), width)
+            self.scale_factor = ratio
+        resized = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
 
-            # return the resized image
-            return resized
-        return image
+        # return the resized image
+        return resized

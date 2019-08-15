@@ -192,10 +192,6 @@ def mouse_callback_2(event,x,y,flags,params):
 print('test')
 end_loop = False
 while end_loop == False:
-    #ret, camera_frame0 = cap.read()
-    #ret, camera_frame1 = cap1.read()
-    #cv2.imshow('frame0', camera_frame0)
-    #cv2.imshow('frame1', camera_frame1)
     cv2.imshow('solver', frame)
     cv2.moveWindow('solver',1920,0)
     frame = np.zeros((450,800,3), np.uint8)

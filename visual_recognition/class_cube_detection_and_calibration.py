@@ -111,6 +111,7 @@ class cube_detection_and_calibration:
 
 
     def remove_point_from_current_polygon(self):
+        print('removed')
         self.current_polygon.remove_point(self.current_polygon_type)
 
 

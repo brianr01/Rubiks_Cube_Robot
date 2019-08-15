@@ -73,94 +73,96 @@ class polygons_menu():
 
         polygon_calibration_segment = {'name':'polygon_calibration_segment',
                                        'location':[0, 0],
-                                       'size':[390,390],
+                                       'size':[607, 1080],
                                        'action_to_get_image':self.draw_polygons,
                                        'parameters':{'current_frame_function':external_functions['get_current_frame'], 'polygons_function':external_functions['get_polygon_points'], 'current_camera_number':external_functions['get_current_camera_number']},
                                        'action_on_event':self.add_polygon}
 
         cube_refrence_segment = {'name':'cube_refrence_segment',
-                                 'location':[700, 250],
-                                 'size':[100,100],
+                                 'location':[305, 607],
+                                 'size':[500,500],
                                  'action_to_get_image':self.get_cube_calibration_segment,
                                  'parameters':{'get_current_polygon_address':external_functions['get_current_polygon_address']}}
 
-        add_button = {'size':[50, 50],
-                      'location':[700, 0],
+        add_button = {'size':[300, 300],
+                      'location':[0, 607],
                       'color':'green',
                       'text_color':'black',
-                      'text':'+',
-                           'action':external_functions['next_polygon']}
+                      'text':'next',
+                      'action':external_functions['next_polygon']}
 
-        previous_button = {'size':[50, 50],
-                           'location':[750, 0],
+        previous_button = {'size':[300, 300],
+                           'location':[0, 907],
                            'color':'red',
                            'text_color':'black',
-                           'text':'-',
+                           'text':'previous',
                            'action':external_functions['previous_polygon']}
 
-        clear_button = {'size':[50, 50],
-                        'location':[750, 50],
+        remove_button = {'size':[300, 200],
+                        'location':[790, 607],
+                        'color':'green',
+                        'text_color':'black',
+                        'text':'delete last point',
+                        'action':external_functions['remove_point_from_current_polygon']}
+
+        clear_button = {'size':[300, 200],
+                        'location':[790, 807],
                         'color':'blue',
                         'text_color':'black',
-                        'text':'C',
+                        'text':'clear current set',
                         'action':external_functions['clear_current_polygon']}
 
-        copy_button = {'size':[100, 50],
-                        'location':[700, 100],
+        reset_all_button = {'size':[300, 200],
+                            'location':[790, 1007],
+                            'color':'red',
+                            'text_color':'black',
+                            'text':'reset all polygons',
+                            'action':external_functions['clear_all_polygons']}
+
+        copy_button = {'size':[100, 100],
+                        'location':[900, 1500],
                         'color':'yellow',
                         'text_color':'black',
                         'text':'copy',
                         'action':external_functions['copy_standard_polygons_to_calibration_polygons']}
 
-        remove_button = {'size':[50, 50],
-                        'location':[700, 50],
-                        'color':'red',
-                        'text_color':'black',
-                        'text':'D',
-                        'action':external_functions['remove_point_from_current_polygon']}
+        
 
-        save_button = {'size':[50, 50],
-                       'location':[750, 150],
-                       'color':'yellow',
+        save_button = {'size':[250, 250],
+                       'location':[0, 1670],
+                       'color':'green',
                        'text_color':'black',
-                       'text':'S',
+                       'text':'save',
                        'action':external_functions['save_visual_recognition_polygons']}
 
-        load_button = {'size':[50, 50],
-                       'location':[700, 150],
+        load_button = {'size':[250, 250],
+                       'location':[250, 1670],
                        'color':'orange',
                        'text_color':'black',
-                       'text':'L',
+                       'text':'load',
                        'action':external_functions['load_visual_recognition_polygons']}
 
-        reset_all_button = {'size':[100, 50],
-                            'location':[700, 200],
-                            'color':'red',
-                            'text_color':'black',
-                            'text':'reset',
-                            'action':external_functions['clear_all_polygons']}
-
-        back_to_calibrate_from_polygon_button = {'size':[100, 50],
-                                                 'location':[700, 400],
+        back_to_calibrate_from_polygon_button = {'size':[500, 100],
+                                                 'location':[300, 1107],
                                                  'color':'white',
                                                  'text_color':'black',
                                                  'text':'back',
                                                  'action':external_functions['change_menu'],
                                                  'parameters':'calibrate'}
 
-        change_type_to_standard = {'size':[50, 50],
-                                    'location':[700, 350],
-                                    'color':'green',
+        change_type_to_standard = {'size':[250, 250],
+                                    'location':[520, 1670],
+                                    'color':'blue',
                                     'text_color':'black',
-                                    'text':'s',
+                                    'text':'standard',
                                     'action':external_functions['change_polygon_type'],
                                     'parameters':'standard'}
 
-        change_type_to_calibration = {'size':[50, 50],
-                                    'location':[750, 350    ],
+        change_type_to_calibration = {'size':[300, 300],
+                                    'location':[770, 1670],
                                     'color':'red',
                                     'text_color':'black',
-                                    'text':'c',
+                                    'text':'calibration',
                                     'action':external_functions['change_polygon_type'],
                                     'parameters':'calibration'}
 
@@ -183,7 +185,6 @@ class polygons_menu():
         current_frame = parameters['current_frame_function'](current_camera)
         polygons = parameters['polygons_function']()
         self.new_frame = current_frame
-        cv2.imshow('new', self.new_frame)
         for polygon in polygons:
                 polygon = np.array(polygon,np.int32)
                 polygon = polygon.reshape((-1,1,2))
@@ -204,7 +205,7 @@ class polygons_menu():
 
     def get_cube_calibration_segment(self, parameters):
         current_polygon_address = parameters['get_current_polygon_address']()
-        image = cv2.imread('cube_reference_image.jpeg')
+        image = cv2.imread(sys.path[0] + '/cube_reference_image.jpeg')
         point = self.cube_reference_points_dictionary[current_polygon_address[0]][current_polygon_address]
         point = (point[0], point[1])
         cv2.circle(image, point, 10, (90,255,0), -1)

@@ -60,7 +60,7 @@ while True:
         cv2.circle(res,point,4,[255,255,255])
     for point in thresholdPoints['b']:
         cv2.circle(res,point,4,[255,255,255])
-    cv2.imshow('frame',frame)
+    #cv2.imshow('frame',frame)
     if cv2.waitKey(1) & 0xFF == ord(' '):
         break
 

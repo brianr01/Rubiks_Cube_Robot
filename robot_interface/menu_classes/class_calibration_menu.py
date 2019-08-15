@@ -18,19 +18,19 @@ class calibration_menu():
         #frames
         calibrate_upper_polygons_segment = {'name':'calibrate_upper_polygons',
                                        'location':[0, 0],
-                                       'size':[266,200],
+                                       'size':[607,1080],
                                        'action_to_get_image':self.draw_polygons,
                                        'parameters':{'current_frame_function':external_functions['get_current_frame'], 'polygons_function':external_functions['get_polygon_points'], 'current_camera_number':1}}
 
         calibrate_lower_polygons_segment = {'name':'calibrate_lower_polygons',
-                                       'location':[0, 200],
-                                       'size':[266,200],
+                                       'location':[0, 607],
+                                       'size':[607,1080],
                                        'action_to_get_image':self.draw_polygons,
                                        'parameters':{'current_frame_function':external_functions['get_current_frame'], 'polygons_function':external_functions['get_polygon_points'], 'current_camera_number':0}}
 
         calibrate_colors_segment = {'name':'calibration_colors',
-                                    'location':[266, 0],
-                                    'size':[532,200],
+                                    'location':[0, 1214],
+                                    'size':[100,1080],
                                     'action_to_get_image':self.render_colors_calibration,
                                     'parameters':{'get_colors_function':external_functions['get_colors_calibration']}}
 
@@ -119,7 +119,7 @@ class calibration_menu():
 
     def render_acceleration_calibration(self, get_acceleration_calibration):
         acceleration_calibration = get_acceleration_calibration()
-        return cv2.imread('acceleration_placeholder.png')
+        return cv2.imread(sys.path[0] + '/acceleration_placeholder.png')
 
     def convert_color_from_lab_to_bgr(self, color):
         input = color

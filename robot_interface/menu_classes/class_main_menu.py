@@ -80,111 +80,111 @@ class main_menu():
         cube = np.zeros((400,266,3), np.uint8)
         cube[:] = (255, 255, 255)
         cube_segment = {'name':'cube',
-                        'location':[0, 0],
-                        'size':[266,400],
+                        'location':[0, 1214],
+                        'size':[703,600],
                         'action_to_get_image':self.render_cube,
                         'parameters':external_functions['get_cube_state']}
 
         camera_0_segment = {'name':'upper_camera',
-                            'location':[266, 0],
-                            'size':[266,200],
+                            'location':[0, 0],
+                            'size':[607, 1080],
                             'action_to_get_image':external_functions['get_current_frame'],
                             'parameters':'0'}
 
         upper_camera_special = np.zeros((200,266,3), np.uint8)
         upper_camera_special[:] = (0, 100, 255)
         camera_0_special_segment = {'name':'upper_camera_special',
-                                    'location':[532, 0],
+                                    'location':[0, 0],
                                     'size':[266,200],
                                     'action_to_get_image':external_functions['get_current_image_in_lab'],
                                     'parameters':'0'}
 
         camera_1_segment = {'name':'lower_camera',
-                            'location':[266, 200],
-                            'size':[266,200],
+                            'location':[0, 607],
+                            'size':[607, 1080],
                             'action_to_get_image':external_functions['get_current_frame'],
                             'parameters':'1'}
 
         lower_camera_special = np.zeros((200,266,3), np.uint8)
         lower_camera_special[:] = (255, 100, 0)
         camera_1_special_segment = {'name':'lower_camera_special',
-                                    'location':[532, 200],
+                                    'location':[0, 607],
                                     'size':[266,200],
                                     'action_to_get_image':external_functions['get_current_image_in_lab'],
                                     'parameters':'1'}
 
-        u_button = {'size':[50, 50],
-                    'location':[0, 400],
+        u_button = {'size':[175, 150],
+                    'location':[630, 1514],
                     'color':'white',
                     'text_color':'black',
-                    'text':'u',
+                    'text':'up',
                     'action':external_functions['turn_side'],
                     'parameters':'u'}
 
-        r_button = {'size':[50, 50],
-                    'location':[50, 400],
+        r_button = {'size':[175, 150],
+                    'location':[465, 1514],
                     'color':'red',
                     'text_color':'black',
-                    'text':'r',
+                    'text':'right',
                     'action':external_functions['turn_side'],
                     'parameters':'r'}
 
-        f_button = {'size':[50, 50],
-                    'location':[100, 400],
+        f_button = {'size':[175, 150],
+                    'location':[805, 1514],
                     'color':'green',
                     'text_color':'black',
-                    'text':'f',
+                    'text':'front',
                     'action':external_functions['turn_side'],
                     'parameters':'f'}
 
-        d_button = {'size':[50, 50],
-                    'location':[150, 400],
+        d_button = {'size':[175, 150],
+                    'location':[630, 1664],
                     'color':'yellow',
                     'text_color':'black',
-                    'text':'d',
+                    'text':'down',
                     'action':external_functions['turn_side'],
                     'parameters':'d'}
 
-        l_button = {'size':[50, 50],
-                    'location':[200, 400],
+        l_button = {'size':[175, 150],
+                    'location':[465, 1664],
                     'color':'blue',
                     'text_color':'black',
-                    'text':'l',
+                    'text':'left',
                     'action':external_functions['turn_side'],
                     'parameters':'l'}
 
-        b_button = {'size':[50, 50],
-                    'location':[250, 400],
+        b_button = {'size':[175, 150],
+                    'location':[805, 1664],
                     'color':'orange',
                     'text_color':'black',
-                    'text':'b',
+                    'text':'back',
                     'action':external_functions['turn_side'],
                     'parameters':'b'}
 
-        solve_button = {'size':[100, 50],
-                        'location':[300, 400],
-                        'color':'white',
+        solve_button = {'size':[1000, 150],
+                        'location':[465, 1214],
+                        'color':'green',
                         'text_color':'black',
                         'text':'solve',
                         'action':external_functions['solve']}
 
-        scramble_button = {'size':[160, 50],
-                           'location':[400, 400],
+        scramble_button = {'size':[1000, 150],
+                           'location':[465, 1364],
                            'color':'yellow',
                            'text_color':'black',
                            'text':'scramble',
                            'action':external_functions['scramble']}
 
-        calibrate_button = {'size':[160, 50],
-                            'location':[560, 400],
-                            'color':'blue',
+        calibrate_button = {'size':[335, 160],
+                            'location':[465, 1815],
+                            'color':'red',
                             'text_color':'black',
                             'text':'calibrate',
                             'action':external_functions['change_menu'],
                             'parameters':'calibrate'}
 
-        quit_button = {'size':[160, 50],
-                       'location':[720, 400],
+        quit_button = {'size':[100, 100],
+                       'location':[980, 1820],
                        'color':'red',
                        'text_color':'black',
                        'text':'quit',

@@ -8,8 +8,6 @@ import timeit
 import time
 
 
-
-
 #adds robot interface to path
 sys.path.append(sys.path[0] + '/robot_interface')
 sys.path.append(sys.path[0] + '/turn_scripts')
@@ -193,7 +191,7 @@ robot = rubiks_cube_solving_robot()
 while True:
     cv2.imshow('frame', robot.render())
     cv2.setMouseCallback('frame', robot.update)
-    cv2.moveWindow('frame', 0,0)
+    cv2.moveWindow('frame', 1920,-35)
     if cv2.waitKey(1) & 0xFF == ord('q') or robot.quit:
         break
 

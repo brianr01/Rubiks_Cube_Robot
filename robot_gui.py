@@ -14,6 +14,9 @@ import random
 import render_cube
 
 
+main_frame_width = 1080
+main_frame_height = 1920
+
 
 
 cube_state = {'u':['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8', 'u9'],
@@ -87,7 +90,7 @@ def get_lab_color(camera):
     current_frame =  cv2.cvtColor(current_frame, cv2.COLOR_BGR2Lab)
     return current_frame
 
-frame = np.zeros((450,800,3), np.uint8)
+frame = np.zeros((main_frame_width,main_frame_height,3), np.uint8)
 
 cube = np.zeros((400,266,3), np.uint8)
 cube[:] = (255, 255, 255)
@@ -183,7 +186,7 @@ polygons_menu = {'buttons':[back_to_calibrate_button, quit_button], 'frames':[]}
 
 menus_data = {'main':main_menu, 'calibrate':calibrate_menu, 'profiles':profiles_menu, 'acceleration':acceleration_menu, 'colors':colors_menu, 'polygons':polygons_menu}
 
-real_menus = class_menus.menus(menus_data, 'main') 
+real_menus = class_menus.menus(menus_data, 'calibrate') 
 
 def mouse_callback_2(event,x,y,flags,params):
     global real_menus
@@ -192,13 +195,9 @@ def mouse_callback_2(event,x,y,flags,params):
 print('test')
 end_loop = False
 while end_loop == False:
-    #ret, camera_frame0 = cap.read()
-    #ret, camera_frame1 = cap1.read()
-    #cv2.imshow('frame0', camera_frame0)
-    #cv2.imshow('frame1', camera_frame1)
     cv2.imshow('solver', frame)
     cv2.moveWindow('solver',1920,0)
-    frame = np.zeros((450,800,3), np.uint8)
+    frame = np.zeros((main_frame_width, main_frame_height,3), np.uint8)
     real_menus.render(frame, {})
     cv2.setMouseCallback('solver', mouse_callback_2)
 
