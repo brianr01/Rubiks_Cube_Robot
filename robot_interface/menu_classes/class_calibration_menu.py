@@ -41,46 +41,46 @@ class calibration_menu():
                                           'parameters':external_functions['get_acceleration_calibration']}
 
         #buttons
-        back_to_main_button = {'size':[120, 50],
-                               'location':[610, 400],
+        back_to_main_button = {'size':[150, 300],
+                               'location':[930, 1621],
                                'color':'white',
                                'text_color':'black',
                                'text':'back',
                                'action':external_functions['change_menu'],
                                'parameters':'main'}
 
-        polygons_button = {'size':[150, 50],
-                           'location':[0, 400],
+        polygons_button = {'size':[200, 300],
+                           'location':[0, 1621],
                            'color':'red',
                            'text_color':'white',
                            'text':'polygons',
                            'action':external_functions['change_menu'],
                            'parameters':'polygons'}
 
-        colors_button = {'size':[120, 50],
-                         'location':[150, 400],
+        colors_button = {'size':[200, 300],
+                         'location':[200, 1621],
                          'color':'green',
                          'text_color':'blue',
                          'text':'colors',
                          'action':external_functions['change_menu'],
                          'parameters':'colors'}
 
-        acceleration_button = {'size':[210, 50],
-                               'location':[270, 400],
+        acceleration_button = {'size':[300, 300],
+                               'location':[400, 1621],
                                'color':'red',
                                'text_color':'black',
                                'text':'acceleration',
                                'action':external_functions['change_menu'],
                                'parameters':'acceleration'}
 
-        profiles_button = {'size':[130, 50],
-                           'location':[480, 400],
+        profiles_button = {'size':[230, 300],
+                           'location':[700, 1621],
                            'color':'yellow',
                            'text_color':'black',
                            'text':'profiles',
                            'action':external_functions['change_menu'],
                            'parameters':'profiles'}
-
+        #not currently used
         quit_button = {'size':[160, 50],
                        'location':[720, 400],
                        'color':'red', 
@@ -88,12 +88,11 @@ class calibration_menu():
                        'text':'quit', 
                        'action':external_functions['initiate_quit']}
 
-        #frames and buttons
+        #frames and buttons, but could possibly be used in the future
         calibration_menu = {'buttons':[back_to_main_button,
                                      polygons_button, colors_button,
                                      acceleration_button,
-                                     profiles_button,
-                                     quit_button], 
+                                     profiles_button], 
                           'frames':[calibrate_upper_polygons_segment,
                                     calibrate_lower_polygons_segment,
                                     calibrate_colors_segment,
@@ -133,6 +132,7 @@ class calibration_menu():
         cube_colors = parameters['get_colors_function']()
         image = np.zeros((height, width, 3),  np.uint8)
         image[:] = (100, 100, 100)
+        color_order = 'rludfb'
         
         x_width = int((532 - (532 % 36)) / 36)
         y_width = int(x_width * (width / height))
@@ -140,10 +140,10 @@ class calibration_menu():
 
         x_current = int((532 % 36)/6)
         
-        for face in cube_colors:
+        for face in color_order:
             cube_faces = cube_colors[face]
 
-            for side in cube_faces:
+            for side in color_order:
                 cube_side = cube_faces[side]
                 y_current = int(y_width / 3)
                 z = 0

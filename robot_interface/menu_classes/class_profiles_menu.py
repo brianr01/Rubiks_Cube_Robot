@@ -14,14 +14,15 @@ sys.path.append(parent_directory)
 class profiles_menu():
     def __init__(self, external_functions):
 
-        back_to_calibrate_button = {'size':[100, 50],
-                                            'location':[700, 350],
+        back_to_calibrate_button = {'size':[150, 300],
+                                    'location':[930, 1621],
                                             'color':'white',
                                             'text_color':'black',
                                             'text':'back',
                                             'action':external_functions['change_menu'],
                                             'parameters':'calibrate'}
 
+        #not currently used
         quit_button = {'size':[100, 50],
                                     'location':[700, 400],
                                     'color':'red',
@@ -29,7 +30,7 @@ class profiles_menu():
                                     'text':'quit',
                                     'action':external_functions['initiate_quit']}
 
-        profiles_menu = {'buttons':[back_to_calibrate_button, quit_button], 'frames':[]}
+        profiles_menu = {'buttons':[back_to_calibrate_button], 'frames':[]}
 
 
         self.menu = profiles_menu

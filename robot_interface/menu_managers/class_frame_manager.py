@@ -36,7 +36,7 @@ class frame_manager:
                 self.image = self.action_to_get_image()
 
 
-        if (frame.shape[1] < self.size[0] + self.location[0]):
+        if (frame.shape[0] < self.size[0] + self.location[0]):
             raise Exception("The image went outside the right side of the frame. The shape of the frame was '", frame.shape[0] , "' and the x location of the image was '", x_offset , "' and the width of the image was '" , self.image.shape[0] , "'")
             return frame
 
@@ -44,7 +44,7 @@ class frame_manager:
             raise Exception("The image went outside the left side of the frame.")
             return frame
 
-        elif (frame.shape[0] < self.size[1] + y_offset):
+        elif (frame.shape[0] < self.size[0] + y_offset):
             raise Exception("The image went outside the bottom of the frame.")
             return frame
 

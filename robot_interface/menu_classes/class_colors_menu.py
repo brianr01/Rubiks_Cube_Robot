@@ -16,47 +16,48 @@ class colors_menu():
 
         upper_polygons__segment = {'name':'calibration_polygons_upper',
                                             'location':[0, 0],
-                                            'size':[266,200],
+                                            'size':[607,1080],
                                             'action_to_get_image':self.draw_polygons,
                                             'parameters':{'current_frame_function':external_functions['get_current_frame'], 'polygons_function':external_functions['get_polygon_points'], 'current_camera_number':0, 'side_to_get':'f'},
                                             }
 
         lower_polygons_segment = {'name':'calibration_polygons_lower',
-                                            'location':[0, 200],
-                                            'size':[266,200],
+                                            'location':[0, 607],
+                                            'size':[607,1080],
                                             'action_to_get_image':self.draw_polygons,
                                             'parameters':{'current_frame_function':external_functions['get_current_frame'], 'polygons_function':external_functions['get_polygon_points'], 'current_camera_number':1, 'side_to_get':'b'},
                                             }
 
-        back_to_calibrate_button = {'size':[100, 50],
-                                    'location':[700, 350],
+        back_to_calibrate_button = {'size':[150, 300],
+                                    'location':[930, 1621],
                                     'color':'white',
                                     'text_color':'black',
                                     'text':'back',
                                     'action':external_functions['change_menu'],
                                     'parameters':'calibrate'}
 
-        save = {'size':[100, 50],
-                'location':[500, 350],
+        save = {'size':[200, 300],
+                'location':[0, 1621],
                 'color':'red',
                 'text_color':'black',
                 'text':'save',
                 'action':external_functions['save_visual_recognition_colors']}
 
-        load = {'size':[100, 50],
-                'location':[600, 350],
+        load = {'size':[200, 300],
+                'location':[200, 1621],
                 'color':'orange',
                 'text_color':'black',
                 'text':'load',
                 'action':external_functions['load_visual_recognition_colors']}
 
-        calibrate = {'size':[160, 50],
-                     'location':[540, 400],
+        calibrate = {'size':[300, 300],
+                     'location':[400, 1621],
                      'color':'green',
                      'text_color':'black',
                      'text':'calibrate',
                      'action':external_functions['calibrate_cube_colors']}
 
+        #not currently used
         quit_button = {'size':[100, 50],
                                     'location':[700, 400],
                                     'color':'red',
@@ -64,7 +65,7 @@ class colors_menu():
                                     'text':'quit',
                                     'action':external_functions['initiate_quit']}
 
-        colors_menu = {'buttons':[back_to_calibrate_button, quit_button, calibrate, save, load], 'frames':[lower_polygons_segment, upper_polygons__segment]}
+        colors_menu = {'buttons':[back_to_calibrate_button, calibrate, save, load], 'frames':[lower_polygons_segment, upper_polygons__segment]}
 
 
         self.menu = colors_menu
