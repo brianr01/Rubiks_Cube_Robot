@@ -10,6 +10,7 @@ class Cube:
             self.sides[pins] = class_motor.Motor(motors_pins[pins][0], motors_pins[pins][1], motors_pins[pins][2])
 
     def execute_algorithm(self, algorithm):
+        print(algorithm)
         move_list = len(algorithm)
         iteration = 0
         
@@ -37,11 +38,11 @@ class Cube:
                     self.sides[algorithm[iteration].lower()].set_motor_direction(direction = False)
                     self.sides[algorithm[iteration].lower()].turn_motor(200)
                     break
-                    
+
     def power_off(self):
         for motor in self.sides:
             self.sides[motor].set_motor_power(state = False)
-    
+
     def power_on(self):
         for motor in self.sides:
-            self.sides[motor].set_motor_power(state = True)   
+            self.sides[motor].set_motor_power(state = True)
