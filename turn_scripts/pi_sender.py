@@ -9,10 +9,8 @@ import math
 import kociemba
 import timeit
 
-
 file_location = '/home/pi/Documents/robot/turn_scripts/'
 file_name = 'current.txt'
-
 
 time_slot_increments = 1000
 
@@ -39,4 +37,3 @@ def run_command(instructions, ssh):
         command = '|' + str(time_stamp) + str(instructions) + '|'
         print(command)
         send_command(command, ssh)
-

@@ -8,8 +8,6 @@ current_directory = sys.path[0]
 parent_directory = path.dirname(current_directory)
 sys.path.append(parent_directory)
 
-
-
 #external functions needed get_cube_position, get_current_frame, get_current_image_in_lab, turn_side, solve, scramble, change_menu, initiate_quit
 class polygons_menu():
     def __init__(self, external_functions):
@@ -126,8 +124,6 @@ class polygons_menu():
                         'text':'copy',
                         'action':external_functions['copy_standard_polygons_to_calibration_polygons']}
 
-        
-
         save_button = {'size':[250, 250],
                        'location':[0, 1670],
                        'color':'green',
@@ -179,7 +175,6 @@ class polygons_menu():
                                    polygon_calibration_segment]}
         self.menu = polygons_menu
 
-
     def draw_polygons(self, parameters):
         current_camera = parameters['current_camera_number']()
         current_frame = parameters['current_frame_function'](current_camera)
@@ -205,11 +200,9 @@ class polygons_menu():
 
     def get_cube_calibration_segment(self, parameters):
         current_polygon_address = parameters['get_current_polygon_address']()
-        image = cv2.imread(sys.path[0] + '/cube_reference_image.jpeg')
+        image = cv2.imread(sys.path[0] + '/robot_interface/menu_classes/images/cube_reference_image.jpeg')
         point = self.cube_reference_points_dictionary[current_polygon_address[0]][current_polygon_address]
         point = (point[0], point[1])
         cv2.circle(image, point, 10, (90,255,0), -1)
-        
-        return image
-    
 
+        return image

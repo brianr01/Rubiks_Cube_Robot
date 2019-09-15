@@ -1,6 +1,5 @@
 import class_motor
 
-
 opposite_side_dictionary = {'r':'l','l':'r','u':'d','d':'u','f':'b','b':'f'}                                                                      
 
 class Cube:
@@ -13,7 +12,7 @@ class Cube:
         print(algorithm)
         move_list = len(algorithm)
         iteration = 0
-        
+
         while True:
             if (iteration >= move_list):
                 break

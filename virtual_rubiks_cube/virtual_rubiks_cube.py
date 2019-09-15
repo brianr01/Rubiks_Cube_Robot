@@ -57,7 +57,7 @@ class Virtual_Cube:
                                    'l1', 'l4', 'l7',
                                    'd7', 'd8', 'd9',
                                    'r9', 'r6', 'r3']}
-    
+
     solved_cube_state = {'u':['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8', 'u9'],
                          'r':['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9'], 
                          'f':['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9'],
@@ -80,7 +80,7 @@ class Virtual_Cube:
     def execute_algorithm(self, algorithm):
         move_list = len(algorithm)
         iteration = 0
-        
+
         while True:
             if (iteration >= move_list):
                 break
@@ -101,12 +101,12 @@ class Virtual_Cube:
                 else:
                     self.turn_side(algorithm[iteration].lower(), True)
                     break
-                
+
     def convert_algorithm(self, algorithm):
         move_list = len(algorithm)
         iteration = 0
         converted_moves = []
-        
+
         while True:
             if (iteration >= move_list):
                 break
@@ -127,18 +127,16 @@ class Virtual_Cube:
                 else:
                     converted_moves.append(algorithm[iteration].upper())
                     break
-                
-        return converted_moves
-        
 
+        return converted_moves
 
     def turn_side(self, face, direction_clockwise):
         if(len(self.cube_position[face]) != 9):
             raise Exception('Array length was not 9')
-        
+
         #rotate the cube face that is passed in
         unordered_cube_face = self.cube_position[face]
-        
+
         #order face in spiral order instead of row order
         ordered_cube_face = [1,2,3,6,9,8,7,4]
         for i in range(0,8):
@@ -165,7 +163,7 @@ class Virtual_Cube:
 
         #rotates the array of adjacent parts
         ordered_cube_side = self.rotate_array(unordered_cube_side, 3, direction_clockwise)
-        
+
         #places the rotated array back into the cube 
         for sticker_number in range(0, len(self.edges_of_moving_face[face])):
             sticker = self.edges_of_moving_face[face][sticker_number]
@@ -234,7 +232,7 @@ class Virtual_Cube:
 
         #create cube faces
         divider = '|============|'
-        iteration = 0       
+        iteration = 0
         formated_cube_faces = []
         for face in cube:
             section = []
@@ -276,8 +274,8 @@ class Virtual_Cube:
     def create_print_rows(self, array1, array2, array3, array4):
         #add columns together
         combined_array = numpy.stack((array1, array2, array3, array4), axis =- 1)
-        less_lines = []   
-        
+        less_lines = []
+
         #combine elements in each line to reduce complexity
         for i in range(0,7):
             line = ''
@@ -288,7 +286,7 @@ class Virtual_Cube:
 
     def get_cube_state(self):
         return self.cube_position
-    
+
     def get_scramble(self, moves = 20):
         possible_moves = ["R ", "R' ", "L ", "L' ", "U ", "U' ", "D ", "D' ", "F ", "F' ", "B ", "B' "]
         scramble = ""
@@ -296,5 +294,3 @@ class Virtual_Cube:
             scramble = scramble + possible_moves[random.randint(0,11)]
 
         return scramble
-
-        

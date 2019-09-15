@@ -4,8 +4,6 @@ import sys
 sys.path.append(sys.path[0] + '/robot_interface/menu_managers')
 sys.path.append(sys.path[0] + '/robot_interface/menu_classes')
 
-
-
 import class_menus_manager
 import cv2
 import numpy as np
@@ -50,6 +48,6 @@ class robot_interface:
         new_frame_info_for_current_menu = {}
         image = self.menus.render(np.zeros((main_frame_height, main_frame_width, 3), np.uint8), new_frame_info_for_current_menu)
         return image
-        
+
     def update(self,cursor_y, cursor_x, event):
         self.menus.update(cursor_x, cursor_y, event)

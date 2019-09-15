@@ -10,33 +10,33 @@ class Motor:
         self.step_pin = step_pin
         self.direction_pin = direction_pin
         self.power_pin = power_pin
-        
+
         #defines the current direction
         self.direction = True
 
         #defines the current power state
         self.power = default_power_state
         self.acceleration_curve = 'default'
-        
+
         #sets up the pins
         Gpio.set_up_pins([self.step_pin, self.direction_pin, self.power_pin])
 
         #sets the power state of the motor to the default power state
-        self.set_motor_power(default_power_state)     
+        self.set_motor_power(default_power_state)
 
-    def set_motor_power(self, state = 'toggle'):    
+    def set_motor_power(self, state = 'toggle'):
         if(state == 'toggle'):
             self.power != self.power
             Gpio.toggle_pin(self.power_pin, self.power)
-        
+
         elif(state == True or state == False):
             self.power = state
             Gpio.toggle_pin(self.power_pin, not self.power)
-        
+
         else:
             return "error: parameter 'state' was in an invalid state. value ={}".format(state)
-        
-    def set_motor_direction(self, direction = 'toggle'):       
+
+    def set_motor_direction(self, direction = 'toggle'):
         if(direction == 'toggle'):
             self.direction != self.direction
             Gpio.toggle_pin(self.direction_pin, self.direction)
@@ -44,15 +44,15 @@ class Motor:
         elif(direction == True or direction == False):
             self.direction = direction
             Gpio.toggle_pin(self.direction_pin, self.direction)
-        
+
         else:
             return "error: parameter 'direction' was in an invalid state. value ={}".format(direction)
-    
+
     def step_motor(self):
         Gpio.toggle_pin(self.step_pin, True)
         Gpio.toggle_pin(self.step_pin, False)
-   
-    def turn_motor(self, steps):      
+
+    def turn_motor(self, steps):
         for step in range(0,steps):
             sleep_time = .0003
             #TODO

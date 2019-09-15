@@ -10,8 +10,6 @@ current_directory = sys.path[0]
 parent_directory = path.dirname(current_directory)
 sys.path.append(parent_directory)
 
-
-
 #external functions needed get_cube_position, get_current_frame, get_current_image_in_lab, turn_side, solve, scramble, change_menu, initiate_quit
 class calibration_menu():
     def __init__(self, external_functions):
@@ -127,7 +125,6 @@ class calibration_menu():
         input = (int(input[0][0][0]), int(input[0][0][1]), int(input[0][0][2]))
         return color
 
-
     def render_colors_calibration(self, parameters, height =  200, width = 532):
         cube_colors = parameters['get_colors_function']()
         image = np.zeros((height, width, 3),  np.uint8)
@@ -153,9 +150,6 @@ class calibration_menu():
                     upper_limit = limit['upper_limit']
                     lower_limit = limit['lower_limit']
 
-##                    upper_limit = cv2.cvtColor( np.uint8([[upper_limit_b]]) , cv2.COLOR_LAB2BGR)[0][0]
-##
-##                    lower_limit = cv2.cvtColor( np.uint8([[lower_limit_b]]) , cv2.COLOR_LAB2BGR)[0][0]
                     upper_limit = (int(upper_limit[0]), int(upper_limit[1]), int(upper_limit[2]))
                     lower_limit = (int(lower_limit[0]), int(lower_limit[1]), int(lower_limit[2]))
 
@@ -167,9 +161,4 @@ class calibration_menu():
                 x_current += x_width
             x_current += int(x_width / 3)
 
-
-
-        # cv2.rectangle(image, (x0, y0), (x1, y1) ,(b, r, g),-1)
-
-    # 18x54
         return image

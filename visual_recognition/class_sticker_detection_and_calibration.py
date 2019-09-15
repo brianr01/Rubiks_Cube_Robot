@@ -18,19 +18,17 @@ class Sticker_Detection_And_Calibration:
                            'r': {'lower_limit':black, 'upper_limit':white}}
 
         self.pixel_count_in_polygon = 0
-    
 
     def calibrate_color(self, image, side):
         possible_sides = ['u', 'd', 'f', 'b', 'l', 'r']
         if (not(side in possible_sides)):
             raise Exception('error: a invalid side was inputted')
         pixels_in_polygon = self.get_pixels_in_polygon(image, self.calibration_polygon_points)        
-        
+
         #this is used in the method to get the color in the polygon
         self.pixel_count_in_polygon = len(pixels_in_polygon)
-        
+
         self.thresholds[side] = self.get_threshold_with_pixels(pixels_in_polygon)
-      
 
     def get_pixels_in_polygon(self, image, polygon_points):
         #all the pixels within the polygon
@@ -39,7 +37,7 @@ class Sticker_Detection_And_Calibration:
         #a box that perfectly encloses the polygon
         boundary_box = self.get_polygon_boundary_box(polygon_points)
 
-        #a mask with the polygon filled in 
+        #a mask with the polygon filled in
         mask = self.get_mask_with_filled_polygon(image, polygon_points)
 
         #a image with the polygon in color
@@ -55,7 +53,6 @@ class Sticker_Detection_And_Calibration:
                        break
 
         return pixels
-
 
     def get_polygon_boundary_box(self, points):
             #gets all the points on the x and y axis
@@ -76,7 +73,6 @@ class Sticker_Detection_And_Calibration:
 
             return boundary_box
 
-
     def get_mask_with_filled_polygon(self, image, polygon_points):
         #gets the width and the height of the image
         width, height, _ = image.shape
@@ -86,7 +82,7 @@ class Sticker_Detection_And_Calibration:
 
         #makes the mask blank
         mask[:] = (0)
- 
+
         #formats the points for the polygon
         polygon_points = np.array(polygon_points,np.int32)
         formated_polygon_points = polygon_points.reshape((-1,1,2))
@@ -95,7 +91,6 @@ class Sticker_Detection_And_Calibration:
         cv2.fillConvexPoly(mask, formated_polygon_points, 255)
         return mask
 
-
     def get_threshold_with_pixels(self, pixels):
         thresholds = {'lower_limit':[255,255,255], 'upper_limit':[0, 0, 0]}
         for pixel in pixels:
@@ -103,16 +98,15 @@ class Sticker_Detection_And_Calibration:
             for color_space_type in range(0,3):
                 if (pixel[color_space_type] > thresholds['upper_limit'][color_space_type]):
                     thresholds['upper_limit'][color_space_type] = pixel[color_space_type]
-                
+
                 elif (pixel[color_space_type] < thresholds['lower_limit'][color_space_type]):
                     thresholds['lower_limit'][color_space_type] = pixel[color_space_type]
         return thresholds
 
-
     def get_color(self, image, polygon_points = None):
         if (polygon_points == None):
             polygon_points = self.polygon_points
-            
+
         pixel_counts = {'f':0,
                         'b':0,
                         'u':0,
@@ -148,18 +142,16 @@ class Sticker_Detection_And_Calibration:
 
         return color
 
-
     def is_value_in_dictionary_over_x(self, dictionary, x):
         for key in dictionary:
             if (dictionary[key] >= x):
                 return True
         return False
 
-
     def get_pixel_count_in_threshold(self, image, polygon_mask, lower_limit, upper_limit):
         threshold_mask = cv2.inRange(image, (lower_limit[0], lower_limit[1], lower_limit[2]), (upper_limit[0], upper_limit[1], upper_limit[2]))
 
-        #mask with only valid colors within the polygon 
+        #mask with only valid colors within the polygon
         mask = cv2.bitwise_and(threshold_mask, polygon_mask)
 
         #the amount of non zeros in the matrix/mask
@@ -173,10 +165,9 @@ class Sticker_Detection_And_Calibration:
             if (dictionary[key] > largest_key_value_pair['value']):
                 largest_key_value_pair['key'] = key
                 largest_key_value_pair['value'] = dictionary[key]
-        
+
         return largest_key_value_pair['key']
 
-    
     def save_thresholds(self):
         thresholds = self.thresholds
         pickle.dump(thresholds, open( "colors_saves/colors_save_" + str(self.name) + ".p", "wb" ))

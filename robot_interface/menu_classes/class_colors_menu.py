@@ -57,16 +57,7 @@ class colors_menu():
                      'text':'calibrate',
                      'action':external_functions['calibrate_cube_colors']}
 
-        #not currently used
-        quit_button = {'size':[100, 50],
-                                    'location':[700, 400],
-                                    'color':'red',
-                                    'text_color':'black',
-                                    'text':'quit',
-                                    'action':external_functions['initiate_quit']}
-
         colors_menu = {'buttons':[back_to_calibrate_button, calibrate, save, load], 'frames':[lower_polygons_segment, upper_polygons__segment]}
-
 
         self.menu = colors_menu
 
@@ -81,4 +72,3 @@ class colors_menu():
                 self.new_frame = cv2.fillConvexPoly(self.new_frame, polygon, (255,255,255), 10)
                 self.new_frame = cv2.polylines(self.new_frame, polygon, True, (90,255,0), 5)
         return self.new_frame
-

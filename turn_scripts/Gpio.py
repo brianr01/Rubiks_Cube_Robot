@@ -24,14 +24,14 @@ def set_up_pins(pins):
     if (use_gpio):
         for pin in pins:
             set_up_pin(pin)
-    
+
 def toggle_pin(pin, state):
     try:
         if (use_gpio):
             GPIO.output(pin, state)
     except Exception as error:
         return error
-    
+
 def tear_down_pins():
     if (use_gpio):
         GPIO.cleanup()

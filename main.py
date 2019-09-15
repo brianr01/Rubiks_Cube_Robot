@@ -8,7 +8,6 @@ import cv2
 import timeit
 import time
 
-
 COMP = "pi"
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -29,7 +28,6 @@ import virtual_rubiks_cube
 import pi_sender
 import class_robot_interface
 import UseWebCam
-
 
 class rubiks_cube_solving_robot:
     def __init__(self):
@@ -70,6 +68,7 @@ class rubiks_cube_solving_robot:
         self.quit = False
         self.visual_recognition.get_thresholds()
         self.current_calibration_step = 0
+
         #can be none, pause, or continue
         self.current_calibration_action = 'none'
 
@@ -114,13 +113,9 @@ class rubiks_cube_solving_robot:
                 cube_state[side].append(str(sticker_color) + str(i))
 
         self.virtual_rubiks_cube.cube_position = cube_state
-        #self.virtual_rubiks_cube.print_cube()
         try:
             solution = self.virtual_rubiks_cube.get_solution()
             self.virtual_rubiks_cube.execute_algorithm(solution)
-
-
-            #solution = self.virtual_rubiks_cube.convert_algorithm(solution)
             try:
                 pi_sender.run_command('on ' + solution, ssh)
                 time.sleep(.5)
@@ -134,7 +129,6 @@ class rubiks_cube_solving_robot:
             print(e)
 
     def scramble(self):
-        #todo write scramble method in virtual rubiks cube scramble = self.virtual_rubiks_cube.get_scramble()
         scramble = self.virtual_rubiks_cube.get_scramble(moves = 50)
         self.virtual_rubiks_cube.execute_algorithm(scramble)
         try:
@@ -143,8 +137,6 @@ class rubiks_cube_solving_robot:
             pi_sender.run_command('of', ssh)
         except:
             print('unable to comunicate with rpi')
-
-
 
     def initiate_quit(self):
         print('end')
@@ -177,20 +169,7 @@ class rubiks_cube_solving_robot:
                                   {'moves':"U' D L R' F B' U' D", 'sides':{                  'u':'b', 'd':'f'}},
                                   {'moves':"U' D L R' F B' U' D", 'sides':{'r':'b', 'l':'f'}},
                                   {'moves':"U' D L' R F' B U' D", 'sides':{}}]
-        # calibrate_instructions = [{'moves':'',                    'sides':{'u':'u'}},
 
-        #                           {'moves':"U D' L' R F B' U D'", 'sides':{'u':'f'}},
-        #                           {'moves':"U D' L' R F B' U D'", 'sides':{'u':'r'}},
-
-        #                           {'moves':"U' D L R' F B' U' D", 'sides':{'u':'r'}},
-        #                           {'moves':"U' D L R' F B' U' D", 'sides':{'u':'d'}},
-
-        #                           {'moves':"U D' L' R F B' U D'", 'sides':{}},
-        #                           {'moves':"U D' L' R F B' U D'", 'sides':{'u':'l'}},
-
-        #                           {'moves':"U' D L R' F B' U' D", 'sides':{}},
-        #                           {'moves':"U' D L R' F B' U' D", 'sides':{'u':'b'}},
-        #                           {'moves':"U' D L' R F' B U' D", 'sides':{}}]
         sides = calibrate_instructions[self.current_calibration_step]['sides']
         if (sides != {}):
             for side in sides:

@@ -72,7 +72,6 @@ class cube_detection_and_calibration:
             new_side = self.current_side
             self.change_current_polygon(new_side, new_polygon_address_number)
 
-
     def copy_standard_polygons_to_calibration_polygons(self):
         for side_letter in self.cube:
             for sticker_address in self.cube[side_letter]:
@@ -87,7 +86,6 @@ class cube_detection_and_calibration:
 
         else:
             self.current_polygon_type = 'standard'
-
 
     def get_polygon_points(self, side_to_get = None, polygon_type = None):
         if (side_to_get == None):
@@ -105,20 +103,16 @@ class cube_detection_and_calibration:
 
         return polygons
 
-
     def add_point_to_current_polygon(self, point):
         self.current_polygon.add_point(point, self.current_polygon_type)
-
 
     def remove_point_from_current_polygon(self):
         print('removed')
         self.current_polygon.remove_point(self.current_polygon_type)
 
-
     def clear_current_polygon(self):
         self.current_polygon.clear_polygon_points(self.current_polygon_type)
         self.cube[self.current_side][self.current_polygon_address].clear_polygon_points(self.current_polygon_type)
-
 
     def clear_all_polygons(self):
         for side_letter in self.cube:
@@ -128,7 +122,6 @@ class cube_detection_and_calibration:
 
     def get_current_polygon_address(self):
         return self.current_polygon_address
-
 
     def save_polygons(self):
         polygon_types = ['calibration','standard']
@@ -148,7 +141,6 @@ class cube_detection_and_calibration:
 
         #saves var polygons in polygon_saves.p
         pickle.dump(polygons, open( "polygons_save.p", "wb" ))
-
 
     def load_polygons(self):
         #loads save file
@@ -187,11 +179,9 @@ class cube_detection_and_calibration:
 
         return cube_position
 
-
     def calibrate_side(self, image, side, color_side):
         for sticker in range(1,10):
             self.cube[side][side + str(sticker)].calibrate_color(image, color_side)
-
 
     def calibrate_sides(self, image, sides_to_color_sides):
         for side in colors_to_sides:
@@ -203,7 +193,6 @@ class cube_detection_and_calibration:
         color = cv2.cvtColor(color, cv2.COLOR_LAB2BGR)
         color = (int(color[0][0][0]), int(color[0][0][1]), int(color[0][0][2]))
         return color
-
 
     def get_thresholds(self):
         side_order = self.side_order
@@ -234,7 +223,6 @@ class cube_detection_and_calibration:
         print('side :', side , '| side_color: ', side_color, '| sticker_number:', sticker_number)
         self.cube[side][side_color + str(sticker_number)].thresholds = value
 
-
     def set_thresholds(self, thresholds):
         side_order = self.side_order
         for side in side_order:
@@ -243,13 +231,11 @@ class cube_detection_and_calibration:
                     threshold = thresholds[side][side + str(sticker_number)]
                     self.set_threshold(side, color, sticker_number, threshold)
 
-
     def save_colors(self):
         side_order = self.side_order
         for side in side_order:
             for sticker_number in range(1,10):
                 self.cube[side][side + str(sticker_number)].save_thresholds()
-
 
     def load_colors(self):
         #loads save file
@@ -257,5 +243,3 @@ class cube_detection_and_calibration:
         for side in side_order:
             for sticker_number in range(1,10):
                 self.cube[side][side + str(sticker_number)].load_thresholds()
-
-
