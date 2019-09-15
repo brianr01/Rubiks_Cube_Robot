@@ -19,7 +19,6 @@ class button_manager:
             self.color = color_switcher[color]
         else:
             self.color = color
-                
 
         if text_color.lower() in color_switcher:
             self.text_color = color_switcher[text_color]
@@ -36,6 +35,7 @@ class button_manager:
     def update(self, cursor_location, event):
         if ((cursor_location[0] > self.location[0][0] and  cursor_location[0] < self.location[1][0]) and (cursor_location[1] > self.location[0][1] and cursor_location[1] < self.location[1][1])):
             if(event == 4):
+                self.being_pressed = True
                 if (self.parameters == None):
                     return self.action()
                 else:
@@ -47,14 +47,14 @@ class button_manager:
         cv2.rectangle(frame, (self.location[0][0], self.location[0][1]), (self.location[1][0], self.location[1][1]) ,(255,255,255),-1)
         cv2.rectangle(frame, (self.location[0][0] + 1, self.location[0][1] + 1), (self.location[1][0] - 1, self.location[1][1] - 1) ,(0,0,0),-1)
 
-        #button 
-        cv2.rectangle(frame, (self.location[0][0] + 2, self.location[0][1] + 2), (self.location[1][0] - 2, self.location[1][1] - 2) ,self.color,-1)
+        #button
+        if (self.being_pressed == True):
+            cv2.rectangle(frame, (self.location[0][0] + 2, self.location[0][1] + 2), (self.location[1][0] - 2, self.location[1][1] - 2) , (0, 0, 0) ,-1)
+        else:
+            cv2.rectangle(frame, (self.location[0][0] + 2, self.location[0][1] + 2), (self.location[1][0] - 2, self.location[1][1] - 2) ,self.color,-1)
+
+        self.being_pressed = False
 
         #button text
         cv2.putText(frame, self.text ,(self.location[0][0] + 9, self.location[0][1] + 30) ,cv2.FONT_HERSHEY_SIMPLEX , 1, self.text_color ,2 ,cv2.LINE_AA)
         return frame
-    
-
-    
-
-        

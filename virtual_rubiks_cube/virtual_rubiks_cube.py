@@ -32,7 +32,7 @@ class Virtual_Cube:
                                    'r3', 'r2', 'r1',
                                    'f3', 'f2', 'f1',
                                    'l3', 'l2', 'l1'],
-                               
+
                               'r':['u9', 'u6', 'u3',
                                    'b1', 'b4', 'b7',
                                    'd9', 'd6', 'd3',
@@ -190,8 +190,7 @@ class Virtual_Cube:
                 del array[-1]
 
         return array
-    
-    
+
     #places the cube in the required state for the used algorithm(kociemba) and returns the solution
     def get_solution(self):
         sides = 'urfdlb'
@@ -203,8 +202,24 @@ class Virtual_Cube:
             for sticker in cube_side:
                 cube_state += sticker[0]
 
+        print(cube_state.upper())
         solution = kociemba.solve(cube_state.upper())
         return solution
+
+    def set_cube_state(self, new_cube_state_to_set):
+        sides = 'urfdlb'
+        cube_state = {}
+        for side in new_cube_state_to_set:
+            cube_side = new_cube_state_to_set[side]
+
+            cube_state[side] = []
+
+        for  i in range(1,10):
+                sticker_color = cube_side[str(i)]
+
+                cube_state[side].append(str(sticker_color) + str(i))
+        print('new_cube_position', cube_state)
+        self.cube_position = cube_state
 
     #takes the current cube state and prints it to the console
     def print_cube(self):

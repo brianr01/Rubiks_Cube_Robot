@@ -1,12 +1,22 @@
 import sys
 from os import path
-
+import winsound
 
 #todo remove import of cv2 when camera module works
+import paramiko
 import cv2
 import timeit
 import time
 
+
+COMP = "pi"
+ssh = paramiko.SSHClient()
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+try:
+    ssh.connect('169.254.136.168', username="pi", password="robotpassword", timeout=10)
+except Exception as e:
+    print('Unable to connect to raspberry pi over the network!')
+    print(e)
 
 #adds robot interface to path
 sys.path.append(sys.path[0] + '/robot_interface')
@@ -14,11 +24,9 @@ sys.path.append(sys.path[0] + '/turn_scripts')
 sys.path.append(sys.path[0] + '/virtual_rubiks_cube')
 sys.path.append(sys.path[0] + '/visual_recognition')
 
-
 import class_cube_detection_and_calibration
 import virtual_rubiks_cube
-import class_cube
-
+import pi_sender
 import class_robot_interface
 import UseWebCam
 
@@ -55,19 +63,12 @@ class rubiks_cube_solving_robot:
                                'save_visual_recognition_colors':self.visual_recognition.save_colors,
                                'load_visual_recognition_colors':self.visual_recognition.load_colors}
 
+        self.visual_recognition.load_polygons()
+        self.visual_recognition.load_colors()
+
         self.interface = class_robot_interface.robot_interface(interface_functions)
         self.quit = False
         self.visual_recognition.get_thresholds()
-
-
-        motors_pins = {'r':[5, 3, 12],
-               'l':[11, 7, 36],
-               'u':[15, 13, 16],
-               'd':[31, 29, 22],
-               'f':[35, 33, 18],
-               'b':[40, 37, 32]}
-
-        self.turn_scripts = class_cube.Cube(motors_pins)
         self.current_calibration_step = 0
         #can be none, pause, or continue
         self.current_calibration_action = 'none'
@@ -87,36 +88,62 @@ class rubiks_cube_solving_robot:
 
     def turn_side(self, move):
         self.virtual_rubiks_cube.execute_algorithm([move])
-        self.turn_scripts.power_on()
-        self.turn_scripts.execute_algorithm(move)
-        self.turn_scripts.power_off()
+        try:
+            pi_sender.run_command('on ' + move, ssh)
+            time.sleep(.5)
+            pi_sender.run_command('of', ssh)
+        except:
+            print('unable to comunicate with rpi')
 
     def solve(self):
         start = timeit.default_timer()
-        frame0 = self.get_current_frame(0)
-        frame1 = self.get_current_frame(1)
-        #cube_position = self.visual_recognition.get_colors(frame0, frame1)
-        cube_position = self.virtual_rubiks_cube.get_cube_state()
-        self.virtual_rubiks_cube.cube_position = cube_position
-        solution = self.virtual_rubiks_cube.get_solution()
-        print(solution)
-        self.virtual_rubiks_cube.execute_algorithm(solution)
+        frame0 = self.get_current_image_in_lab(0)
+        frame1 = self.get_current_image_in_lab(1)
+        new_cube_state_to_set = self.visual_recognition.get_colors(frame0, frame1)
+
+        sides = 'urfdlb'
+        cube_state = {}
+        for side in new_cube_state_to_set:
+            cube_side = new_cube_state_to_set[side]
+
+            cube_state[side] = []
+
+            for  i in range(1,10):
+                sticker_color = cube_side[str(i)]
+
+                cube_state[side].append(str(sticker_color) + str(i))
+
+        self.virtual_rubiks_cube.cube_position = cube_state
+        #self.virtual_rubiks_cube.print_cube()
+        try:
+            solution = self.virtual_rubiks_cube.get_solution()
+            self.virtual_rubiks_cube.execute_algorithm(solution)
 
 
-        #solution = self.virtual_rubiks_cube.convert_algorithm(solution)
+            #solution = self.virtual_rubiks_cube.convert_algorithm(solution)
+            try:
+                pi_sender.run_command('on ' + solution, ssh)
+                time.sleep(.5)
+                pi_sender.run_command('of', ssh)
+            except:
+                print('unable to comunicate with rpi')
 
-        self.turn_scripts.power_on()
-        self.turn_scripts.execute_algorithm(solution)
-        self.turn_scripts.power_off()
-        print(timeit.default_timer() - start)
+            print(timeit.default_timer() - start)
+        except Exception as e:
+            print('couldn"t find solution')
+            print(e)
 
     def scramble(self):
         #todo write scramble method in virtual rubiks cube scramble = self.virtual_rubiks_cube.get_scramble()
         scramble = self.virtual_rubiks_cube.get_scramble(moves = 50)
         self.virtual_rubiks_cube.execute_algorithm(scramble)
-        self.turn_scripts.power_on()
-        self.turn_scripts.execute_algorithm(scramble)
-        self.turn_scripts.power_off()
+        try:
+            pi_sender.run_command('on ' + scramble, ssh)
+            time.sleep(.5)
+            pi_sender.run_command('of', ssh)
+        except:
+            print('unable to comunicate with rpi')
+
 
 
     def initiate_quit(self):
@@ -136,20 +163,20 @@ class rubiks_cube_solving_robot:
     def calibrate_cube_colors(self):
         print('started')
         side_to_camera_dict = {'b':1, 'u':1, 'r':1, 'f':0, 'd':0, 'l':0}
-        calibrate_instructions = [{'moves':'',                    'sides':{'r':'f', 'l':'l', 'u':'u', 'd':'d', 'f':'f', 'b':'b'}},
+        calibrate_instructions = [{'moves':'',                    'sides':{'r':'r', 'l':'l', 'u':'u', 'd':'d', 'f':'f', 'b':'b'}},
 
                                   {'moves':"U D' L' R F B' U D'", 'sides':{'r':'u', 'l':'d', 'u':'f', 'd':'b', 'f':'r', 'b':'l'}},
                                   {'moves':"U D' L' R F B' U D'", 'sides':{'r':'f', 'l':'b', 'u':'r', 'd':'l', 'f':'u', 'b':'d'}},
 
-                                  {'moves':"U' D L R' F B' U' D", 'sides':{'r':'l', 'l':'r'                                    }},
-                                  {'moves':"U' D L R' F B' U' D", 'sides':{'r':'d', 'l':'u', 'u':'d', 'd':'f'                  }},
+                                  {'moves':"U' D L R' F B' U' D", 'sides':{                  'u':'d', 'd':'u', 'f':'b', 'b':'f'}},
+                                  {'moves':"U' D L R' F B' U' D", 'sides':{'r':'d', 'l':'u', 'f':'l', 'b':'r'}},
 
-                                  {'moves':"U D' L' R F B' U D'", 'sides':{'r':'b', 'l':'f',                   'f':'d', 'b':'u'}},
-                                  {'moves':"U D' L' R F B' U D'", 'sides':{                  'u':'l', 'd':'u', 'f':'b', 'b':'f'}},
+                                  {'moves':"U D' L' R F B' U D'", 'sides':{                  'u':'l', 'd':'r', 'f':'d', 'b':'u'}},
+                                  {'moves':"U D' L' R F B' U D'", 'sides':{'r':'l', 'l':'r'}},
 
-                                  {'moves':"U' D L R' F B' U' D", 'sides':{                                    'f':'l', 'b':'r'}},
-                                  {'moves':"U' D L R' F B' U' D", 'sides':{                  'u':'b', 'd':'r'                  }},
-                                  {'moves':"U' D L' R F' B U' D", 'sides':{                                                    }}]
+                                  {'moves':"U' D L R' F B' U' D", 'sides':{                  'u':'b', 'd':'f'}},
+                                  {'moves':"U' D L R' F B' U' D", 'sides':{'r':'b', 'l':'f'}},
+                                  {'moves':"U' D L' R F' B U' D", 'sides':{}}]
         # calibrate_instructions = [{'moves':'',                    'sides':{'u':'u'}},
 
         #                           {'moves':"U D' L' R F B' U D'", 'sides':{'u':'f'}},
@@ -164,30 +191,42 @@ class rubiks_cube_solving_robot:
         #                           {'moves':"U' D L R' F B' U' D", 'sides':{}},
         #                           {'moves':"U' D L R' F B' U' D", 'sides':{'u':'b'}},
         #                           {'moves':"U' D L' R F' B U' D", 'sides':{}}]
-                
         sides = calibrate_instructions[self.current_calibration_step]['sides']
         if (sides != {}):
             for side in sides:
-                self.visual_recognition.calibrate_side(self.get_current_frame(side_to_camera_dict[side]), side, sides[side])
-                
+                self.visual_recognition.calibrate_side(self.get_current_image_in_lab(side_to_camera_dict[side]), side, sides[side])
+
         self.current_calibration_step += 1
-        
+
+        if (self.current_calibration_step >= len(calibrate_instructions)):
+            self.current_calibration_step = 0
 
         moves = calibrate_instructions[self.current_calibration_step]['moves']
-        self.turn_scripts.power_on()
-        self.turn_scripts.execute_algorithm(moves)
+        try:
+            pi_sender.run_command('on ' + moves, ssh)
+        except:
+            print('unable to comunicate with rpi')
         self.virtual_rubiks_cube.execute_algorithm(moves)
         time.sleep(.5)
-        self.turn_scripts.power_off()
-        
-        
+        try:
+            pi_sender.run_command('of', ssh)
+        except:
+            print('unable to comunicate with rpi')
 
-        
         if self.current_calibration_step >= len(calibrate_instructions):
             self.current_calibration_step = 0
         print ('done')
+        side_dict = {'r':'right','l':'left ','u':'up   ','d':'down ','f':'front','b':'back '}
+        color_dict = {'r':'red   ','l':'orange','u':'white ','d':'yellow','f':'green ','b':'blue  '}
+        for side in sides:
+            print([side_dict[side], color_dict[sides[side]]])
+
 
 robot = rubiks_cube_solving_robot()
+
+for i in range(1,5):
+    winsound.Beep(2000, 100)
+
 while True:
     cv2.imshow('frame', robot.render())
     cv2.setMouseCallback('frame', robot.update)

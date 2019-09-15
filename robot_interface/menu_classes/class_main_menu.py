@@ -215,18 +215,25 @@ class main_menu():
         frame = np.zeros((400,266,3), np.uint8)
         frame[:] = (255, 255, 255)
 
-        #gets the cube's current position
-        position = external_function()
+        try:
+            #gets the cube's current position
+            position = external_function()
 
-        #iterates over the cube's position to add all the stickers to the image
-        for side in position:
-            for sticker_number, sticker in enumerate(position[side]):
+            #iterates over the cube's position to add all the stickers to the image
+            for side in position:
+                for sticker_number in range(0, len(position[side])):
+                    if (type(position[side]) == type(dict())):
+                        sticker = position[side][str(sticker_number + 1)]
+                    else:
+                        sticker = position[side][sticker_number]
 
-                #get the x,y location for printing out the cube
-                point_1 = points[side][sticker_number]
-                point_2 = [points[side][sticker_number][0] + 29, points[side][sticker_number][1] + 29]
+                    #get the x,y location for printing out the cube
+                    point_1 = points[side][sticker_number]
+                    point_2 = [points[side][sticker_number][0] + 29, points[side][sticker_number][1] + 29]
 
-                #add the sticker to the frame
-                cv2.rectangle(frame, (point_1[0], point_1[1] - 20) ,(point_2[0], point_2[1] - 20), (0,0,0), -1)
-                cv2.rectangle(frame, (point_1[0]+2, point_1[1] - 18) ,(point_2[0]-2, point_2[1] - 22), faces_to_colors[sticker[0]], -1)
+                    #add the sticker to the frame
+                    cv2.rectangle(frame, (point_1[0], point_1[1] - 20) ,(point_2[0], point_2[1] - 20), (0,0,0), -1)
+                    cv2.rectangle(frame, (point_1[0]+2, point_1[1] - 18) ,(point_2[0]-2, point_2[1] - 22), faces_to_colors[sticker[0]], -1)
+        except Exception as e:
+            print(e)
         return frame

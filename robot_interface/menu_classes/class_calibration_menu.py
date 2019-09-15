@@ -83,16 +83,16 @@ class calibration_menu():
         #not currently used
         quit_button = {'size':[160, 50],
                        'location':[720, 400],
-                       'color':'red', 
-                       'text_color':'black', 
-                       'text':'quit', 
+                       'color':'red',
+                       'text_color':'black',
+                       'text':'quit',
                        'action':external_functions['initiate_quit']}
 
         #frames and buttons, but could possibly be used in the future
         calibration_menu = {'buttons':[back_to_main_button,
                                      polygons_button, colors_button,
                                      acceleration_button,
-                                     profiles_button], 
+                                     profiles_button],
                           'frames':[calibrate_upper_polygons_segment,
                                     calibrate_lower_polygons_segment,
                                     calibrate_colors_segment,
@@ -133,13 +133,13 @@ class calibration_menu():
         image = np.zeros((height, width, 3),  np.uint8)
         image[:] = (100, 100, 100)
         color_order = 'rludfb'
-        
+
         x_width = int((532 - (532 % 36)) / 36)
         y_width = int(x_width * (width / height))
         y_width = int(x_width * 1.6)
 
         x_current = int((532 % 36)/6)
-        
+
         for face in color_order:
             cube_faces = cube_colors[face]
 
@@ -148,7 +148,7 @@ class calibration_menu():
                 y_current = int(y_width / 3)
                 z = 0
                 for sticker in range(0, len(cube_side)):
-                    limit = cube_side[sticker]
+                    limit = cube_side[sticker + 1]
 
                     upper_limit = limit['upper_limit']
                     lower_limit = limit['lower_limit']
@@ -158,10 +158,10 @@ class calibration_menu():
 ##                    lower_limit = cv2.cvtColor( np.uint8([[lower_limit_b]]) , cv2.COLOR_LAB2BGR)[0][0]
                     upper_limit = (int(upper_limit[0]), int(upper_limit[1]), int(upper_limit[2]))
                     lower_limit = (int(lower_limit[0]), int(lower_limit[1]), int(lower_limit[2]))
-                    
+
                     cv2.rectangle(image, (x_current, y_current), (x_current + 10, y_current + 10) , upper_limit, -1)
                     cv2.rectangle(image, (x_current+6, y_current), (x_current + 12, y_current+10),  lower_limit, -1)
-                    
+
                     y_current += y_width
 
                 x_current += x_width
@@ -172,4 +172,4 @@ class calibration_menu():
         # cv2.rectangle(image, (x0, y0), (x1, y1) ,(b, r, g),-1)
 
     # 18x54
-        return image  
+        return image

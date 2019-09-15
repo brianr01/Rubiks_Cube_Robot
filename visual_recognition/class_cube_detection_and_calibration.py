@@ -174,18 +174,16 @@ class cube_detection_and_calibration:
             else:
                 sides_for_camera[side] = image_1
 
-        cube_position = {'f':[],
-                         'b':[],
-                         'u':[],
-                         'd':[],
-                         'l':[],
-                         'r':[]}
+        cube_position = {'f':{},
+                         'b':{},
+                         'u':{},
+                         'd':{},
+                         'l':{},
+                         'r':{}}
         for side in self.cube:
             for piece in self.cube[side]:
-                print(piece)
                 color = self.cube[side][piece].get_color(sides_for_camera[side])
-                print('color:', color)
-                cube_position[side].append(color)
+                cube_position[side][piece[1]] = color
 
         return cube_position
 
@@ -211,12 +209,12 @@ class cube_detection_and_calibration:
         side_order = self.side_order
         thresholds = {}
         for side in side_order:
-            thresholds[side] = {'r':[],
-                                'l':[],
-                                'u':[],
-                                'd':[],
-                                'f':[],
-                                'b':[]}
+            thresholds[side] = {'r':{},
+                                'l':{},
+                                'u':{},
+                                'd':{},
+                                'f':{},
+                                'b':{}}
 
             for sticker_number in range(1,10):
                 for color in side_order:
@@ -229,8 +227,12 @@ class cube_detection_and_calibration:
                     #upper_limit = self.convert_color_from_lab_to_bgr(lower_limit)
 
                     thresholds_to_add = {'lower_limit': lower_limit, 'upper_limit':upper_limit}
-                    thresholds[side][color].append(thresholds_to_add)
+                    thresholds[side][color][sticker_number] = thresholds_to_add
         return thresholds
+
+    def set_threshold(self, side, side_color, sticker_number, value):
+        print('side :', side , '| side_color: ', side_color, '| sticker_number:', sticker_number)
+        self.cube[side][side_color + str(sticker_number)].thresholds = value
 
 
     def set_thresholds(self, thresholds):
@@ -238,18 +240,22 @@ class cube_detection_and_calibration:
         for side in side_order:
             for sticker_number in range(1,10):
                 for color in side_order:
-                    self.cube[side][color].thresholds = thresholds[side][color]
+                    threshold = thresholds[side][side + str(sticker_number)]
+                    self.set_threshold(side, color, sticker_number, threshold)
 
 
     def save_colors(self):
-        thresholds = self.get_thresholds()
-
-        #saves var polygons in polygon_saves.p
-        pickle.dump(thresholds, open( "colors_save.p", "wb" ))
+        side_order = self.side_order
+        for side in side_order:
+            for sticker_number in range(1,10):
+                self.cube[side][side + str(sticker_number)].save_thresholds()
 
 
     def load_colors(self):
         #loads save file
-        thesholds = pickle.load(open( "colors_save.p", "rb" ))
+        side_order = self.side_order
+        for side in side_order:
+            for sticker_number in range(1,10):
+                self.cube[side][side + str(sticker_number)].load_thresholds()
 
-        self.set_thresholds(thesholds)
+

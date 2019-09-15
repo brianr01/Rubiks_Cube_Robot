@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import statistics
+import pickle
 
 class Sticker_Detection_And_Calibration:
     def __init__(self, sticker_name):
@@ -118,8 +119,8 @@ class Sticker_Detection_And_Calibration:
                         'd':0,
                         'l':0,
                         'r':0}
-                        
-        max_iterations = 255
+
+        max_iterations = 10
         iterations = 0
         min_percent =  .05
         min_pixels = self.pixel_count_in_polygon * min_percent
@@ -131,22 +132,19 @@ class Sticker_Detection_And_Calibration:
 
         while (iterations <= max_iterations):
             iterations += 1
-            print(iterations)
-
             #does a color have enough pixels to make a good guess at what the color is? if so break
-            if (self.is_value_in_dictionary_over_x(pixel_counts, min_pixels)):
-                print('break')
+            if (self.is_value_in_dictionary_over_x(pixel_counts, 60)):
                 break
 
-            
             #test to see how many pixels of the different colors is in the threshold +/- the iteration
             for side in self.thresholds:
-                lower_limit = (0, self.thresholds[side]['lower_limit'][1] - iterations, self.thresholds[side]['lower_limit'][2] - iterations)
-                upper_limit = (255, self.thresholds[side]['upper_limit'][1] + iterations, self.thresholds[side]['upper_limit'][2] + iterations)
+                lower_limit = (0, self.thresholds[side]['lower_limit'][1] - iterations * 2, self.thresholds[side]['lower_limit'][2] - iterations * 2)
+                upper_limit = (255, self.thresholds[side]['upper_limit'][1] + iterations * 2, self.thresholds[side]['upper_limit'][2] + iterations * 2)
                 pixel_counts[side] = self.get_pixel_count_in_threshold(image, polygon_mask, lower_limit, upper_limit)
 
         #finds the color with the most valid pixels
         color = self.get_largest_key_value_pair_in_dictionary(pixel_counts)
+        print(color, pixel_counts)
 
         return color
 
@@ -169,7 +167,6 @@ class Sticker_Detection_And_Calibration:
 
         return valid_pixels
 
-
     def get_largest_key_value_pair_in_dictionary(self, dictionary):
         largest_key_value_pair = {'key':'', 'value':0}
         for key in dictionary:
@@ -178,6 +175,16 @@ class Sticker_Detection_And_Calibration:
                 largest_key_value_pair['value'] = dictionary[key]
         
         return largest_key_value_pair['key']
+
+    
+    def save_thresholds(self):
+        thresholds = self.thresholds
+        pickle.dump(thresholds, open( "colors_saves/colors_save_" + str(self.name) + ".p", "wb" ))
+
+
+    def load_thresholds(self):
+        thresholds = pickle.load(open( "colors_saves/colors_save_" + str(self.name) + ".p", "rb" ))
+        self.thresholds = thresholds
 
     def get_polygon_points(self, polygon_type):
         if (polygon_type == 'calibration'):

@@ -9,10 +9,6 @@ import math
 import kociemba
 import timeit
 
-COMP = "pi"
-ssh = paramiko.SSHClient()
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-ssh.connect('169.254.136.168', username="pi", password="popcornamerica23", allow_agent = False)
 
 file_location = '/home/pi/Documents/robot/turn_scripts/'
 file_name = 'current.txt'
@@ -20,7 +16,7 @@ file_name = 'current.txt'
 
 time_slot_increments = 1000
 
-def send_command(command):
+def send_command(command, ssh):
         print(command)
         stdin, stdout, stderr = ssh.exec_command('echo "' + command + '" >> ' + file_location + '/' + file_name)
 
@@ -38,8 +34,9 @@ def generate_time_stamp():
         time_stamp = int(math.floor((current_time * 1000) % 10000000000))
         return time_stamp
 
-def run_command(instructions):
+def run_command(instructions, ssh):
         time_stamp = generate_time_stamp()
         command = '|' + str(time_stamp) + str(instructions) + '|'
         print(command)
-        send_command(command)
+        send_command(command, ssh)
+

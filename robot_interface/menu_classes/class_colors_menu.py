@@ -81,3 +81,4 @@ class colors_menu():
                 self.new_frame = cv2.fillConvexPoly(self.new_frame, polygon, (255,255,255), 10)
                 self.new_frame = cv2.polylines(self.new_frame, polygon, True, (90,255,0), 5)
         return self.new_frame
+
