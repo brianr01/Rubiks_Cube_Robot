@@ -200,7 +200,7 @@ class polygons_menu():
 
     def get_cube_calibration_segment(self, parameters):
         current_polygon_address = parameters['get_current_polygon_address']()
-        image = cv2.imread(sys.path[0] + '/robot_interface/menu_classes/images/cube_reference_image.jpeg')
+        image = cv2.imread(sys.path[0] + '/cube_reference_image.jpeg')
         point = self.cube_reference_points_dictionary[current_polygon_address[0]][current_polygon_address]
         point = (point[0], point[1])
         cv2.circle(image, point, 10, (90,255,0), -1)

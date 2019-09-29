@@ -114,7 +114,7 @@ class Sticker_Detection_And_Calibration:
                         'l':0,
                         'r':0}
 
-        max_iterations = 10
+        max_iterations = 20
         iterations = 0
         min_percent =  .05
         min_pixels = self.pixel_count_in_polygon * min_percent
@@ -127,13 +127,13 @@ class Sticker_Detection_And_Calibration:
         while (iterations <= max_iterations):
             iterations += 1
             #does a color have enough pixels to make a good guess at what the color is? if so break
-            if (self.is_value_in_dictionary_over_x(pixel_counts, 60)):
+            if (self.is_value_in_dictionary_over_x(pixel_counts, 20)):
                 break
 
             #test to see how many pixels of the different colors is in the threshold +/- the iteration
             for side in self.thresholds:
-                lower_limit = (0, self.thresholds[side]['lower_limit'][1] - iterations * 2, self.thresholds[side]['lower_limit'][2] - iterations * 2)
-                upper_limit = (255, self.thresholds[side]['upper_limit'][1] + iterations * 2, self.thresholds[side]['upper_limit'][2] + iterations * 2)
+                lower_limit = (0, self.thresholds[side]['lower_limit'][1] - iterations * 1.5, self.thresholds[side]['lower_limit'][2] - iterations * 1.5)
+                upper_limit = (255, self.thresholds[side]['upper_limit'][1] + iterations * 1.5, self.thresholds[side]['upper_limit'][2] + iterations * 1.5)
                 pixel_counts[side] = self.get_pixel_count_in_threshold(image, polygon_mask, lower_limit, upper_limit)
 
         #finds the color with the most valid pixels
