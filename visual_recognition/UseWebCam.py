@@ -31,6 +31,7 @@ try:
     #test the frames to ensure they show
     cv2.imshow('test', frame0)
     cv2.imshow('test', frame1)
+    cv2.destroyAllWindows()
 except Exception as error:
     #when a camera is not pluged in swap to synthetic frames
     print('The cameras were not detected.  Switching to synthetic frames')

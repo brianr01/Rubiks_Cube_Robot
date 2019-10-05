@@ -8,6 +8,7 @@ class Sticker_Detection_And_Calibration:
         self.name = sticker_name
         self.polygon_points = []
         self.calibration_polygon_points = []
+        self.current_color = [0, 0, 0]
         white = cv2.cvtColor( np.uint8([[(255,255,255)]] ), cv2.COLOR_BGR2LAB)[0][0]
         black = cv2.cvtColor( np.uint8([[(0,0,0)]] ), cv2.COLOR_BGR2LAB)[0][0]
         self.thresholds = {'u': {'lower_limit':black, 'upper_limit':white},
@@ -114,7 +115,7 @@ class Sticker_Detection_And_Calibration:
                         'l':0,
                         'r':0}
 
-        max_iterations = 20
+        max_iterations = 125
         iterations = 0
         min_percent =  .05
         min_pixels = self.pixel_count_in_polygon * min_percent
@@ -132,12 +133,13 @@ class Sticker_Detection_And_Calibration:
 
             #test to see how many pixels of the different colors is in the threshold +/- the iteration
             for side in self.thresholds:
-                lower_limit = (0, self.thresholds[side]['lower_limit'][1] - iterations * 1.5, self.thresholds[side]['lower_limit'][2] - iterations * 1.5)
-                upper_limit = (255, self.thresholds[side]['upper_limit'][1] + iterations * 1.5, self.thresholds[side]['upper_limit'][2] + iterations * 1.5)
+                lower_limit = (0, self.thresholds[side]['lower_limit'][1] - iterations * 2, self.thresholds[side]['lower_limit'][2] - iterations * 2)
+                upper_limit = (255, self.thresholds[side]['upper_limit'][1] + iterations * 2, self.thresholds[side]['upper_limit'][2] + iterations * 2)
                 pixel_counts[side] = self.get_pixel_count_in_threshold(image, polygon_mask, lower_limit, upper_limit)
 
         #finds the color with the most valid pixels
         color = self.get_largest_key_value_pair_in_dictionary(pixel_counts)
+        self.current_color = color
         print(color, pixel_counts)
 
         return color

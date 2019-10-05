@@ -2,6 +2,7 @@ import class_sticker_detection_and_calibration
 import numpy as np
 import cv2
 import pickle
+import threading
 
 class cube_detection_and_calibration:
     def __init__(self):
@@ -160,6 +161,7 @@ class cube_detection_and_calibration:
 
     def get_colors(self, image_0, image_1):
         sides_for_camera = {}
+        jobs = []
         for side in self.sides_dictionary:
             if (self.sides_dictionary[side] == 0):
                 sides_for_camera[side] = image_0
@@ -174,8 +176,30 @@ class cube_detection_and_calibration:
                          'r':{}}
         for side in self.cube:
             for piece in self.cube[side]:
-                color = self.cube[side][piece].get_color(sides_for_camera[side])
-                cube_position[side][piece[1]] = color
+                job = threading.Thread(target=self.cube[side][piece].get_color, args=([sides_for_camera[side]]))
+
+                jobs.append(job)
+
+        max_thread_count = 10
+        threads = []
+        while (len(jobs) >= 1):
+            while (len(threads) < max_thread_count):
+                if (len(jobs) <= 0):
+                    break
+                current_job = jobs[0]
+                current_job.start()
+                jobs.pop(0)
+                threads.append(current_job)
+            for thread_number in range(0, len(threads) - 1):
+                if not threads[thread_number].isAlive():
+                    threads.pop(thread_number)
+                    break
+        for thread in threads:
+            thread.join()
+
+        for side in self.cube:
+            for piece in self.cube[side]:
+                cube_position[side][piece[1]] = self.cube[side][piece].current_color
 
         return cube_position
 
