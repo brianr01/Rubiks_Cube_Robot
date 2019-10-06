@@ -24,7 +24,7 @@ class Sticker_Detection_And_Calibration:
         possible_sides = ['u', 'd', 'f', 'b', 'l', 'r']
         if (not(side in possible_sides)):
             raise Exception('error: a invalid side was inputted')
-        pixels_in_polygon = self.get_pixels_in_polygon(image, self.calibration_polygon_points)        
+        pixels_in_polygon = self.get_pixels_in_polygon(image, self.calibration_polygon_points)
 
         #this is used in the method to get the color in the polygon
         self.pixel_count_in_polygon = len(pixels_in_polygon)

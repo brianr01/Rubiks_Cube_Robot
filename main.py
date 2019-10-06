@@ -213,5 +213,4 @@ while True:
     if cv2.waitKey(1) & 0xFF == ord('q') or robot.quit:
         break
 
-
 cv2.destroyAllWindows()
