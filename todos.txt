@@ -1,0 +1,1 @@
+adding acceleration curve to turn scripts
