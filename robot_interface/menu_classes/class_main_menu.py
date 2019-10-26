@@ -86,7 +86,7 @@ class main_menu():
         camera_0_segment = {'name':'upper_camera',
                             'location':[0, 0],
                             'size':[607, 1080],
-                            'action_to_get_image':external_functions['get_current_frame'],
+                            'action_to_get_image':external_functions['get_current_image_in_lab'],
                             'parameters':'0'}
 
         upper_camera_special = np.zeros((200,266,3), np.uint8)
@@ -94,13 +94,13 @@ class main_menu():
         camera_0_special_segment = {'name':'upper_camera_special',
                                     'location':[0, 0],
                                     'size':[266,200],
-                                    'action_to_get_image':external_functions['get_current_image_in_lab'],
+                                    'action_to_get_image':external_functions['get_current_frame'],
                                     'parameters':'0'}
 
         camera_1_segment = {'name':'lower_camera',
                             'location':[0, 607],
                             'size':[607, 1080],
-                            'action_to_get_image':external_functions['get_current_frame'],
+                            'action_to_get_image':external_functions['get_current_image_in_lab'],
                             'parameters':'1'}
 
         lower_camera_special = np.zeros((200,266,3), np.uint8)
@@ -108,7 +108,7 @@ class main_menu():
         camera_1_special_segment = {'name':'lower_camera_special',
                                     'location':[0, 607],
                                     'size':[266,200],
-                                    'action_to_get_image':external_functions['get_current_image_in_lab'],
+                                    'action_to_get_image':external_functions['get_current_frame'],
                                     'parameters':'1'}
 
         u_button = {'size':[175, 150],

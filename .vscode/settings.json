@@ -1,0 +1,8 @@
+{
+    "files.exclude": {
+        ".vscode": true,
+        "**/OLD\\ FILES": true
+    },
+    "python.linting.enabled": true,
+    "python.pythonPath": "C:\\Python27\\python.exe"
+}
