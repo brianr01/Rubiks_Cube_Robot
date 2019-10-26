@@ -145,7 +145,7 @@ class cube_detection_and_calibration:
 
     def load_polygons(self):
         #loads save file
-        polygons = pickle.load(open( "polygons_save.p", "rb" ))
+        polygons = pickle.load(open( "polygons_save.p", "r" ))
 
         #iterates over all the polygons and sets them to the class
         for side in polygons:
@@ -215,7 +215,7 @@ class cube_detection_and_calibration:
         input = color
         color = np.uint8([[color]])
         color = cv2.cvtColor(color, cv2.COLOR_LAB2BGR)
-        color = (int(color[0][0][0]), int(color[0][0][1]), int(color[0][0][2]))
+        color = ( int(x) for x in color[0] )
         return color
 
     def get_thresholds(self):
@@ -235,9 +235,6 @@ class cube_detection_and_calibration:
                     single_threshold = sticker.thresholds[color]
                     lower_limit = single_threshold['lower_limit']
                     upper_limit = single_threshold['upper_limit']
-
-                    #lower_limit = self.convert_color_from_lab_to_bgr(upper_limit)
-                    #upper_limit = self.convert_color_from_lab_to_bgr(lower_limit)
 
                     thresholds_to_add = {'lower_limit': lower_limit, 'upper_limit':upper_limit}
                     thresholds[side][color][sticker_number] = thresholds_to_add
