@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import statistics
 import pickle
+import sys
 
 class Sticker_Detection_And_Calibration:
     def __init__(self, sticker_name):
@@ -20,6 +21,7 @@ class Sticker_Detection_And_Calibration:
 
         self.pixel_count_in_polygon = 0
 
+
     def calibrate_color(self, image, side):
         possible_sides = ['u', 'd', 'f', 'b', 'l', 'r']
         if (not(side in possible_sides)):
@@ -30,6 +32,7 @@ class Sticker_Detection_And_Calibration:
         self.pixel_count_in_polygon = len(pixels_in_polygon)
 
         self.thresholds[side] = self.get_threshold_with_pixels(pixels_in_polygon)
+
 
     def get_pixels_in_polygon(self, image, polygon_points):
         #all the pixels within the polygon
@@ -55,6 +58,7 @@ class Sticker_Detection_And_Calibration:
 
         return pixels
 
+
     def get_polygon_boundary_box(self, points):
             #gets all the points on the x and y axis
             x_points = []
@@ -69,20 +73,18 @@ class Sticker_Detection_And_Calibration:
 
                 return boundary_box
 
-
-            boundary_box = [[int(min(x_points)), int(min(y_points))], [int(max(x_points)), int(max(y_points))]]
+            boundary_box = [[int(min(x_points)), int(min(y_points))],
+                            [int(max(x_points)), int(max(y_points))]]
 
             return boundary_box
+
 
     def get_mask_with_filled_polygon(self, image, polygon_points):
         #gets the width and the height of the image
         width, height, _ = image.shape
 
         #creates a blank binary image that is the same size as the inputted image
-        mask = np.zeros((width, height, 1), np.uint8)
-
-        #makes the mask blank
-        mask[:] = (0)
+        mask = np.zeros((width, height), np.uint8)
 
         #formats the points for the polygon
         polygon_points = np.array(polygon_points,np.int32)
@@ -91,6 +93,7 @@ class Sticker_Detection_And_Calibration:
         #fills in the area within the polygon
         cv2.fillConvexPoly(mask, formated_polygon_points, 255)
         return mask
+
 
     def get_threshold_with_pixels(self, pixels):
         thresholds = {'lower_limit':[255,255,255], 'upper_limit':[0, 0, 0]}
@@ -104,54 +107,58 @@ class Sticker_Detection_And_Calibration:
                     thresholds['lower_limit'][color_space_type] = pixel[color_space_type]
         return thresholds
 
+
     def get_color(self, image, polygon_points = None):
+        #if the polygon_points were not given use the object's polygon_points
         if (polygon_points == None):
             polygon_points = self.polygon_points
 
-        pixel_counts = {'f':0,
-                        'b':0,
-                        'u':0,
-                        'd':0,
-                        'l':0,
-                        'r':0}
+        #current score counts for the different colors in sides
+        pixel_counts = {'f':0, 'b':0, 'u':0, 'd':0, 'l':0,'r':0}
 
         max_iterations = 125
-        iterations = 0
-        min_percent =  .05
-        min_pixels = self.pixel_count_in_polygon * min_percent
-        #a box that perfectly encloses the polygon
-        boundary_box = self.get_polygon_boundary_box(polygon_points)
 
         #a mask with the polygon filled in
         polygon_mask = self.get_mask_with_filled_polygon(image, polygon_points)
 
-        while (iterations <= max_iterations):
-            iterations += 1
+        for i in range(1, max_iterations):
             #does a color have enough pixels to make a good guess at what the color is? if so break
-            if (self.is_value_in_dictionary_over_x(pixel_counts, 20)):
+            if (self.get_largest_number_in_dictionary(pixel_counts) > 20):
                 break
 
             #test to see how many pixels of the different colors is in the threshold +/- the iteration
             for side in self.thresholds:
-                lower_limit = (0, self.thresholds[side]['lower_limit'][1] - iterations * 2, self.thresholds[side]['lower_limit'][2] - iterations * 2)
-                upper_limit = (255, self.thresholds[side]['upper_limit'][1] + iterations * 2, self.thresholds[side]['upper_limit'][2] + iterations * 2)
+                amount_to_change_threshold = i * 2
+
+                lower_limit = (0,
+                               self.thresholds[side]['lower_limit'][1] - amount_to_change_threshold,
+                               self.thresholds[side]['lower_limit'][2] - amount_to_change_threshold)
+
+                upper_limit = (255,
+                               self.thresholds[side]['upper_limit'][1] + amount_to_change_threshold,
+                               self.thresholds[side]['upper_limit'][2] + amount_to_change_threshold)
+
+                #the amount of pixels within the threshold
                 pixel_counts[side] = self.get_pixel_count_in_threshold(image, polygon_mask, lower_limit, upper_limit)
 
         #finds the color with the most valid pixels
-        color = self.get_largest_key_value_pair_in_dictionary(pixel_counts)
+        color = max(pixel_counts, key=pixel_counts.get)
         self.current_color = color
+
+        #print the predicted color with its associated scores
         print(color, pixel_counts)
 
         return color
 
-    def is_value_in_dictionary_over_x(self, dictionary, x):
-        for key in dictionary:
-            if (dictionary[key] >= x):
-                return True
-        return False
+    def get_largest_number_in_dictionary(self, dictionary):
+        largest_number_key = max(dictionary, key=dictionary.get)
+        largest_number = dictionary[largest_number_key]
+
+        return largest_number
+
 
     def get_pixel_count_in_threshold(self, image, polygon_mask, lower_limit, upper_limit):
-        threshold_mask = cv2.inRange(image, (lower_limit[0], lower_limit[1], lower_limit[2]), (upper_limit[0], upper_limit[1], upper_limit[2]))
+        threshold_mask = cv2.inRange(image, tuple(lower_limit), tuple(upper_limit))
 
         #mask with only valid colors within the polygon
         mask = cv2.bitwise_and(threshold_mask, polygon_mask)
@@ -161,14 +168,6 @@ class Sticker_Detection_And_Calibration:
 
         return valid_pixels
 
-    def get_largest_key_value_pair_in_dictionary(self, dictionary):
-        largest_key_value_pair = {'key':'', 'value':0}
-        for key in dictionary:
-            if (dictionary[key] > largest_key_value_pair['value']):
-                largest_key_value_pair['key'] = key
-                largest_key_value_pair['value'] = dictionary[key]
-
-        return largest_key_value_pair['key']
 
     def save_thresholds(self):
         thresholds = self.thresholds
@@ -176,8 +175,9 @@ class Sticker_Detection_And_Calibration:
 
 
     def load_thresholds(self):
-        thresholds = pickle.load(open( "colors_saves/colors_save_" + str(self.name) + ".p", "rb" ))
+        thresholds = pickle.load(open( "colors_saves/colors_save_" + str(self.name) + ".p", "r" ))
         self.thresholds = thresholds
+
 
     def get_polygon_points(self, polygon_type):
         if (polygon_type == 'calibration'):
@@ -189,6 +189,7 @@ class Sticker_Detection_And_Calibration:
         else:
             raise Exception('error: the polygon type inputted was not valid')
 
+
     def set_polygon_points(self, polygon_points, polygon_type):
         if (polygon_type == 'calibration'):
             self.calibration_polygon_points = polygon_points
@@ -199,6 +200,7 @@ class Sticker_Detection_And_Calibration:
         else:
             raise Exception('error: the polygon type inputted was not valid')
 
+
     def add_point(self, point, polygon_type):
         if (polygon_type == 'calibration'):
             self.calibration_polygon_points.append(point)
@@ -208,6 +210,7 @@ class Sticker_Detection_And_Calibration:
 
         else:
             raise Exception('error: the polygon type inputted was not valid')
+
 
     def remove_point(self, polygon_type):
         if (polygon_type == 'calibration'):
@@ -220,6 +223,7 @@ class Sticker_Detection_And_Calibration:
 
         else:
             raise Exception('error: the polygon type inputted was not valid')
+
 
     def clear_polygon_points(self, polygon_type):
         if (polygon_type == 'calibration'):
@@ -234,6 +238,7 @@ class Sticker_Detection_And_Calibration:
 
         else:
             raise Exception('error: the polygon type inputted was not valid')
+
 
     def copy_standard__polygons_to_calibration_polygons(self):
         self.calibration_polygon_points = self.polygon_points

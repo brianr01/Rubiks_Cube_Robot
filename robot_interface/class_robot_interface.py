@@ -37,9 +37,9 @@ class robot_interface:
 
         menus = {'main':self.main_menu.menu, 'calibrate':self.calibraion_menu.menu, 'polygons':self.polygons_menu.menu, 'colors':self.colors_menu.menu, 'acceleration':self.acceleration_menu.menu, 'profiles':self.profiles_menu.menu}
 
-        self.menus = class_menus_manager.menus_manager(menus, 'acceleration')
+        self.menus = class_menus_manager.menus_manager(menus, 'calibrate')
         self.quit = False
-        self.frame = np.zeros((main_frame_height, main_frame_width, 3), np.uint8)        
+        self.frame = np.zeros((main_frame_height, main_frame_width, 3), np.uint8)
 
     def change_menu(self, menu_name):
         self.menus.set_current_menu(menu_name)

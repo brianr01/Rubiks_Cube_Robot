@@ -164,7 +164,7 @@ class Virtual_Cube:
         #rotates the array of adjacent parts
         ordered_cube_side = self.rotate_array(unordered_cube_side, 3, direction_clockwise)
 
-        #places the rotated array back into the cube 
+        #places the rotated array back into the cube
         for sticker_number in range(0, len(self.edges_of_moving_face[face])):
             sticker = self.edges_of_moving_face[face][sticker_number]
             current_side = sticker[0]

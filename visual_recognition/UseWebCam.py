@@ -19,6 +19,7 @@ def add_to_captures(camera_number):
 #set up the cameras
 print('setting up cameras')
 try:
+    #sets up the video capture
     thread0 = threading.Thread(target=add_to_captures, args=([0]))
     thread1 = threading.Thread(target=add_to_captures, args=([1]))
     thread0.start()
@@ -26,7 +27,6 @@ try:
     thread0.join()
     thread1.join()
 
-    #set up the video capture
     cap0 = captures[0]
     cap1 = captures[1]
 
@@ -48,7 +48,7 @@ try:
     cv2.destroyAllWindows()
 except Exception as error:
     print(error)
-    #when a camera is not pluged in swap to synthetic frames
+    #when a camera is not plugged in swap to synthetic frames
     print('The cameras were not detected.  Switching to synthetic frames')
     frame0 = cv2.imread(sys.path[0] + '/frame0.jpg')
     frame1 = cv2.imread(sys.path[0] + '/frame1.jpg')
