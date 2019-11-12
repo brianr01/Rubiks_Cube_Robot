@@ -84,10 +84,7 @@ class Sticker_Detection_And_Calibration:
         width, height, _ = image.shape
 
         #creates a blank binary image that is the same size as the inputted image
-        mask = np.zeros((width, height, 0), np.uint8)
-
-        #makes the mask blank
-        mask[:] = (0)
+        mask = np.zeros((width, height), np.uint8)
 
         #formats the points for the polygon
         polygon_points = np.array(polygon_points,np.int32)
