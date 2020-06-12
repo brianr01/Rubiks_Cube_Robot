@@ -11,9 +11,7 @@ import numpy as np
 import class_main_menu
 import class_calibration_menu
 import class_polygons_menu
-import class_colors_menu
 import class_acceleration_menu
-import class_profiles_menu
 
 main_frame_width  = 1080
 main_frame_height = 1920
@@ -29,15 +27,11 @@ class robot_interface:
 
         self.polygons_menu = class_polygons_menu.polygons_menu(external_functions)
 
-        self.colors_menu = class_colors_menu.colors_menu(external_functions)
-
         self.acceleration_menu = class_acceleration_menu.acceleration_menu(external_functions)
 
-        self.profiles_menu = class_profiles_menu.profiles_menu(external_functions)
+        menus = {'main':self.main_menu.menu, 'calibrate':self.calibraion_menu.menu, 'polygons':self.polygons_menu.menu, 'acceleration':self.acceleration_menu.menu}
 
-        menus = {'main':self.main_menu.menu, 'calibrate':self.calibraion_menu.menu, 'polygons':self.polygons_menu.menu, 'colors':self.colors_menu.menu, 'acceleration':self.acceleration_menu.menu, 'profiles':self.profiles_menu.menu}
-
-        self.menus = class_menus_manager.menus_manager(menus, 'calibrate')
+        self.menus = class_menus_manager.menus_manager(menus, 'main')
         self.quit = False
         self.frame = np.zeros((main_frame_height, main_frame_width, 3), np.uint8)
 

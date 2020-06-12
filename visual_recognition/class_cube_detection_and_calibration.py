@@ -94,13 +94,9 @@ class cube_detection_and_calibration:
 
         if (polygon_type == None):
             polygon_type = self.current_polygon_type
-
+        self.current_polygon_address
         polygons = []
-        for side_letter in self.cube:
-            side = self.cube[side_letter]
-            if (self.sides_dictionary[side_letter] == self.sides_dictionary[side_to_get]):
-                for sticker_letter in side:
-                    polygons.append(side[sticker_letter].get_polygon_points(polygon_type))
+        polygons.append(self.current_polygon.get_polygon_points(polygon_type))
 
         return polygons
 
@@ -111,9 +107,11 @@ class cube_detection_and_calibration:
         print('removed')
         self.current_polygon.remove_point(self.current_polygon_type)
 
+
     def clear_current_polygon(self):
         self.current_polygon.clear_polygon_points(self.current_polygon_type)
         self.cube[self.current_side][self.current_polygon_address].clear_polygon_points(self.current_polygon_type)
+
 
     def clear_all_polygons(self):
         for side_letter in self.cube:
@@ -121,8 +119,10 @@ class cube_detection_and_calibration:
             for sticker_address in side:
                 self.cube[side_letter][sticker_address].clear_polygon_points(self.current_polygon_type)
 
+
     def get_current_polygon_address(self):
         return self.current_polygon_address
+
 
     def save_polygons(self):
         polygon_types = ['calibration','standard']
@@ -143,10 +143,10 @@ class cube_detection_and_calibration:
         #saves var polygons in polygon_saves.p
         pickle.dump(polygons, open( "polygons_save.p", "wb" ))
 
+
     def load_polygons(self):
         #loads save file
-        polygons = pickle.load(open( "polygons_save.p", "r" ))
-
+        polygons = pickle.load(open( "polygons_save.p", "rb" ))
         #iterates over all the polygons and sets them to the class
         for side in polygons:
             polygons_side = polygons[side]
@@ -159,6 +159,7 @@ class cube_detection_and_calibration:
 
                     self.cube[side][sticker].set_polygon_points(polygon, polygon_type)
 
+
     def get_colors(self, image_0, image_1):
         sides_for_camera = {}
         jobs = []
@@ -168,12 +169,12 @@ class cube_detection_and_calibration:
             else:
                 sides_for_camera[side] = image_1
 
-        cube_position = {'f':{},
-                         'b':{},
-                         'u':{},
-                         'd':{},
-                         'l':{},
-                         'r':{}}
+        cube_position = {'f':[],
+                         'b':[],
+                         'u':[],
+                         'd':[],
+                         'l':[],
+                         'r':[]}
         for side in self.cube:
             for piece in self.cube[side]:
                 job = threading.Thread(target=self.cube[side][piece].get_color, args=([sides_for_camera[side]]))
@@ -199,68 +200,6 @@ class cube_detection_and_calibration:
 
         for side in self.cube:
             for piece in self.cube[side]:
-                cube_position[side][piece[1]] = self.cube[side][piece].current_color
+                cube_position[side].append(self.cube[side][piece].current_color)
 
         return cube_position
-
-    def calibrate_side(self, image, side, color_side):
-        for sticker in range(1,10):
-            self.cube[side][side + str(sticker)].calibrate_color(image, color_side)
-
-    def calibrate_sides(self, image, sides_to_color_sides):
-        for side in colors_to_sides:
-            self.calibrate_sides(image, side, sides_to_color_sides[side])
-
-    def convert_color_from_lab_to_bgr(self, color):
-        input = color
-        color = np.uint8([[color]])
-        color = cv2.cvtColor(color, cv2.COLOR_LAB2BGR)
-        color = ( int(x) for x in color[0] )
-        return color
-
-    def get_thresholds(self):
-        side_order = self.side_order
-        thresholds = {}
-        for side in side_order:
-            thresholds[side] = {'r':{},
-                                'l':{},
-                                'u':{},
-                                'd':{},
-                                'f':{},
-                                'b':{}}
-
-            for sticker_number in range(1,10):
-                for color in side_order:
-                    sticker = self.cube[side][side + str(sticker_number)]
-                    single_threshold = sticker.thresholds[color]
-                    lower_limit = single_threshold['lower_limit']
-                    upper_limit = single_threshold['upper_limit']
-
-                    thresholds_to_add = {'lower_limit': lower_limit, 'upper_limit':upper_limit}
-                    thresholds[side][color][sticker_number] = thresholds_to_add
-        return thresholds
-
-    def set_threshold(self, side, side_color, sticker_number, value):
-        print('side :', side , '| side_color: ', side_color, '| sticker_number:', sticker_number)
-        self.cube[side][side_color + str(sticker_number)].thresholds = value
-
-    def set_thresholds(self, thresholds):
-        side_order = self.side_order
-        for side in side_order:
-            for sticker_number in range(1,10):
-                for color in side_order:
-                    threshold = thresholds[side][side + str(sticker_number)]
-                    self.set_threshold(side, color, sticker_number, threshold)
-
-    def save_colors(self):
-        side_order = self.side_order
-        for side in side_order:
-            for sticker_number in range(1,10):
-                self.cube[side][side + str(sticker_number)].save_thresholds()
-
-    def load_colors(self):
-        #loads save file
-        side_order = self.side_order
-        for side in side_order:
-            for sticker_number in range(1,10):
-                self.cube[side][side + str(sticker_number)].load_thresholds()

@@ -12,31 +12,21 @@ resolution = [1920, 1080]
 
 captures = {}
 
-def add_to_captures(camera_number):
-    global captures
-    captures[camera_number] = cv2.VideoCapture(camera_number)
-
 #set up the cameras
 print('setting up cameras')
 try:
     #sets up the video capture
-    thread0 = threading.Thread(target=add_to_captures, args=([0]))
-    thread1 = threading.Thread(target=add_to_captures, args=([1]))
-    thread0.start()
-    thread1.start()
-    thread0.join()
-    thread1.join()
 
-    cap0 = captures[0]
-    cap1 = captures[1]
+    cap0 = cv2.VideoCapture(2)
+    cap1 = cv2.VideoCapture(0)
 
     #sets up the resolution for the first camera
-    cap0.set(3, resolution[0])
-    cap0.set(4, resolution[1])
+    cap0.set(3, resolution[0]/2)
+    cap0.set(4, resolution[1]/2)
 
     #sets up the resolution for the second camera
-    cap1.set(3, resolution[0])
-    cap1.set(4, resolution[1])
+    cap1.set(3, resolution[0]/2)
+    cap1.set(4, resolution[1]/2)
 
     #get the frames from the cameras
     ret, frame0 = cap0.read()
@@ -64,5 +54,14 @@ def get_current_frames():
     else:
         frame0 = cv2.imread(sys.path[0] + '/frame0.jpg')
         frame1 = cv2.imread(sys.path[0] + '/frame1.jpg')
+    
+    # for i in range(0, 12):
+    #     ret, frame0 = cap0.read()
+    #     ret, frame1 = cap1.read()
+    #     cv2.imshow('test', frame0)
+    #     cv2.imshow('test1', frame1)
+    #     if cv2.waitKey(1) & 0xFF == ord('q'):
+    #         break
+    # cv2.destroyAllWindows()
 
     return [frame0, frame1]

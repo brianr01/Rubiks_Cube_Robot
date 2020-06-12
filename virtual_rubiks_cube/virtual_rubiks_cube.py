@@ -27,6 +27,7 @@ import random
 
 
 class Virtual_Cube:
+    side_order = 'urfdlb'
 
     edges_of_moving_face = {'u':['b3', 'b2', 'b1',
                                    'r3', 'r2', 'r1',
@@ -58,23 +59,23 @@ class Virtual_Cube:
                                    'd7', 'd8', 'd9',
                                    'r9', 'r6', 'r3']}
 
-    solved_cube_state = {'u':['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8', 'u9'],
-                         'r':['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9'], 
-                         'f':['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9'],
-                         'd':['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9'],
-                         'l':['l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9'],
-                         'b':['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9']}
+    solved_cube_state = {'u':['u', 'u', 'u', 'u', 'u', 'u', 'u', 'u', 'u'],
+                         'r':['r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r'], 
+                         'f':['f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f'],
+                         'd':['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd'],
+                         'l':['l', 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l'],
+                         'b':['b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b']}
 
     def __init__(self):
         self.reset()
 
     def reset(self):
-        self.cube_position = {'u':['u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'u7', 'u8', 'u9'],
-                              'r':['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9'], 
-                              'f':['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9'],
-                              'd':['d1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9'],
-                              'l':['l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9'],
-                              'b':['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9']}
+        self.cube_position = {'u':['u', 'u', 'u', 'u', 'u', 'u', 'u', 'u', 'u'],
+                              'r':['r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r'], 
+                              'f':['f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f'],
+                              'd':['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd'],
+                              'l':['l', 'l', 'l', 'l', 'l', 'l', 'l', 'l', 'l'],
+                              'b':['b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b']}
 
     #takes an input in cube notation and executes them on the virtual cube
     def execute_algorithm(self, algorithm):
@@ -191,33 +192,37 @@ class Virtual_Cube:
 
     #places the cube in the required state for the used algorithm(kociemba) and returns the solution
     def get_solution(self):
-        sides = 'urfdlb'
-
-        #puts cube in readable state for kociemba
-        cube_state = ''
-        for side in sides:
-            cube_side = self.cube_position[side]
-            for sticker in cube_side:
-                cube_state += sticker[0]
-
-        print(cube_state.upper())
-        solution = kociemba.solve(cube_state.upper())
+        solution = kociemba.solve(self.get_cube_position_for_kociemba())
         return solution
 
-    def set_cube_state(self, new_cube_state_to_set):
-        sides = 'urfdlb'
-        cube_state = {}
-        for side in new_cube_state_to_set:
-            cube_side = new_cube_state_to_set[side]
+    def get_cube_position_for_kociemba(self):
+        oriented_cube =self.get_orientated_cube()
 
-            cube_state[side] = []
+        cube_position_for_kociemba = ''
+        for side in self.side_order:
+            cube_side = oriented_cube[side]
+            for sticker in cube_side:
+                cube_position_for_kociemba += sticker[0]
 
-        for  i in range(1,10):
-                sticker_color = cube_side[str(i)]
+        return cube_position_for_kociemba.upper()
 
-                cube_state[side].append(str(sticker_color) + str(i))
-        print('new_cube_position', cube_state)
-        self.cube_position = cube_state
+    def get_orientated_cube(self):
+
+        orientation_map = self.get_orientation_map()
+
+        orientated_cube = self.cube_position
+        for side in self.side_order:
+            for i in range(0, len(orientated_cube[side])):
+                orientated_cube[side][i] = orientation_map[orientated_cube[side][i]]
+        
+        return orientated_cube
+    
+    def get_orientation_map(self):
+        orientation_map = {}
+        for side in self.cube_position:
+            orientation_map[self.cube_position[side][4]] = side
+        
+        return orientation_map
 
     #takes the current cube state and prints it to the console
     def print_cube(self):

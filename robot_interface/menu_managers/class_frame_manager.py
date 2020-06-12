@@ -62,11 +62,13 @@ class frame_manager:
 
             x = location[0] - self.location[0]
             y = location[1] - self.location[1]
-            #print(self.image.shape)
+            print(location)
+            print(self.scale_factor)
             if (x >= 0 and y >= 0) and (x <= self.resized_image.shape[1] and y <= self.resized_image.shape[0]):
                 self.action_on_event(math.floor(x*self.scale_factor),math.floor(y*self.scale_factor),event)
 
     def image_resize(self, image, size):
+        # return image
         width = size[0]
         height = size[1]
         (h, w) = image.shape[:2]

@@ -26,17 +26,11 @@ class calibration_menu():
                                        'action_to_get_image':self.draw_polygons,
                                        'parameters':{'current_frame_function':external_functions['get_current_frame'], 'polygons_function':external_functions['get_polygon_points'], 'current_camera_number':0}}
 
-        calibrate_colors_segment = {'name':'calibration_colors',
-                                    'location':[0, 1214],
-                                    'size':[100,1080],
-                                    'action_to_get_image':self.render_colors_calibration,
-                                    'parameters':{'get_colors_function':external_functions['get_colors_calibration']}}
-
-        calibrate_acceleration_segment = {'name':'calibration_acceleration',
-                                          'location':[266, 200],
-                                          'size':[532,200],
-                                          'action_to_get_image':self.render_acceleration_calibration,
-                                          'parameters':external_functions['get_acceleration_calibration']}
+        # calibrate_acceleration_segment = {'name':'calibration_acceleration',
+        #                                   'location':[266, 200],
+        #                                   'size':[532,200],
+        #                                   'action_to_get_image':self.render_acceleration_calibration,
+        #                                   'parameters':external_functions['get_acceleration_calibration']}
 
         #buttons
         back_to_main_button = {'size':[150, 300],
@@ -55,14 +49,6 @@ class calibration_menu():
                            'action':external_functions['change_menu'],
                            'parameters':'polygons'}
 
-        colors_button = {'size':[200, 300],
-                         'location':[200, 1621],
-                         'color':'green',
-                         'text_color':'blue',
-                         'text':'colors',
-                         'action':external_functions['change_menu'],
-                         'parameters':'colors'}
-
         acceleration_button = {'size':[300, 300],
                                'location':[400, 1621],
                                'color':'red',
@@ -71,13 +57,6 @@ class calibration_menu():
                                'action':external_functions['change_menu'],
                                'parameters':'acceleration'}
 
-        profiles_button = {'size':[230, 300],
-                           'location':[700, 1621],
-                           'color':'yellow',
-                           'text_color':'black',
-                           'text':'profiles',
-                           'action':external_functions['change_menu'],
-                           'parameters':'profiles'}
         #not currently used
         quit_button = {'size':[160, 50],
                        'location':[720, 400],
@@ -88,13 +67,12 @@ class calibration_menu():
 
         #frames and buttons, but could possibly be used in the future
         calibration_menu = {'buttons':[back_to_main_button,
-                                     polygons_button, colors_button,
-                                     acceleration_button,
-                                     profiles_button],
+                                     polygons_button,
+                                     acceleration_button,],
                           'frames':[calibrate_upper_polygons_segment,
                                     calibrate_lower_polygons_segment,
-                                    calibrate_colors_segment,
-                                    calibrate_acceleration_segment]}
+                                    # calibrate_acceleration_segment
+                                    ]}
         self.menu = calibration_menu
 
     def draw_polygons(self, parameters):

@@ -73,7 +73,7 @@ class polygons_menu():
                                        'location':[0, 0],
                                        'size':[607, 1080],
                                        'action_to_get_image':self.draw_polygons,
-                                       'parameters':{'current_frame_function':external_functions['get_current_frame'], 'polygons_function':external_functions['get_polygon_points'], 'current_camera_number':external_functions['get_current_camera_number']},
+                                       'parameters':{'current_frame_function':external_functions['get_current_frame'], 'polygons_function':external_functions['get_polygon_points'], 'current_camera_number':external_functions['get_current_camera_number'], 'get_current_polygon_address':external_functions['get_current_polygon_address']},
                                        'action_on_event':self.add_polygon}
 
         cube_refrence_segment = {'name':'cube_refrence_segment',
@@ -176,10 +176,12 @@ class polygons_menu():
         self.menu = polygons_menu
 
     def draw_polygons(self, parameters):
+
         current_camera = parameters['current_camera_number']()
         current_frame = parameters['current_frame_function'](current_camera)
         polygons = parameters['polygons_function']()
         self.new_frame = current_frame
+        print(polygons)
         for polygon in polygons:
                 polygon = np.array(polygon,np.int32)
                 polygon = polygon.reshape((-1,1,2))
@@ -191,7 +193,11 @@ class polygons_menu():
     def add_polygon(self, x,y,event):
         if (event == 4):
             print('added')
-            self.external_functions['add_point_to_current_polygon']([x,y])
+            
+            self.external_functions['add_point_to_current_polygon']([x - 50,y + 50])
+            self.external_functions['add_point_to_current_polygon']([x + 50,y + 50])
+            self.external_functions['add_point_to_current_polygon']([x + 50,y - 50])
+            self.external_functions['add_point_to_current_polygon']([x - 50,y - 50])
 
     def next_polygon(self, x,y,event):
         if (event == 4):
