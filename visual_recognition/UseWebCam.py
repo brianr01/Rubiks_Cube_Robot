@@ -15,26 +15,22 @@ captures = {}
 #set up the cameras
 print('setting up cameras')
 try:
-    #sets up the video capture
+    cap0 = cv2.VideoCapture(0)
+    cap1 = cv2.VideoCapture(2)
 
-    cap0 = cv2.VideoCapture(2)
-    cap1 = cv2.VideoCapture(0)
-
-    #sets up the resolution for the first camera
+    
     cap0.set(3, resolution[0]/2)
     cap0.set(4, resolution[1]/2)
 
-    #sets up the resolution for the second camera
     cap1.set(3, resolution[0]/2)
     cap1.set(4, resolution[1]/2)
 
-    #get the frames from the cameras
     ret, frame0 = cap0.read()
     ret, frame1 = cap1.read()
 
-    #test the frames to ensure they show
     cv2.imshow('test', frame0)
-    cv2.imshow('test', frame1)
+    cv2.imshow('test2', frame1)
+    
     cv2.destroyAllWindows()
 except Exception as error:
     print(error)

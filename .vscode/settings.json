@@ -4,5 +4,6 @@
         "**/OLD\\ FILES": true
     },
     "python.linting.enabled": true,
-    "python.pythonPath": "C:\\Python27\\python.exe"
+    "python.pythonPath": "/home/brian/anaconda3/envs/robot-env-no-gpu/bin/python",
+    "python.linting.pylintEnabled": true
 }

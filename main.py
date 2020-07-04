@@ -3,27 +3,11 @@ from os import path
 import os
 
 #todo remove import of cv2 when camera module works
-import paramiko
 import cv2
 import timeit
 import time
 import numpy
-import tensorflow as tf
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Flatten, BatchNormalization, Activation
-from keras.layers.convolutional import Conv2D, MaxPooling2D
-from keras.constraints import maxnorm
 
-COMP = "pi"
-ssh = paramiko.SSHClient()
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-try:
-    ssh.connect('192.168.2.249', username="pi", password="robotpassword", timeout=10)
-except Exception as e:
-    print('Unable to connect to raspberry pi over the network!')
-    print(e)
-
-model = tf.keras.models.load_model("cube_ai_model_9995")
 #adds robot interface to path
 sys.path.append(sys.path[0] + '/robot_interface')
 sys.path.append(sys.path[0] + '/turn_scripts')
@@ -32,13 +16,14 @@ sys.path.append(sys.path[0] + '/visual_recognition')
 
 import class_cube_detection_and_calibration
 import virtual_rubiks_cube
-import pi_sender
+import robot_cube_controller
 import class_robot_interface
 import UseWebCam
 
 class rubiks_cube_solving_robot:
     def __init__(self):
         self.current_frame = UseWebCam.get_current_frames()
+        self.cube = robot_cube_controller.Robot_Cube_Controller()
 
         self.virtual_rubiks_cube = virtual_rubiks_cube.Virtual_Cube()
         self.visual_recognition = class_cube_detection_and_calibration.cube_detection_and_calibration()
@@ -88,16 +73,13 @@ class rubiks_cube_solving_robot:
         return frame
 
     def turn_side(self, move):
+        print(move)
         self.virtual_rubiks_cube.execute_algorithm([move])
-        try:
-            pi_sender.run_command('on ' + move, ssh)
-            time.sleep(.5)
-            pi_sender.run_command('of', ssh)
-        except:
-            print('unable to comunicate with rpi')
+
+        self.cube.execute_algorithm_string(move)
 
     def solve(self):
-        start = timeit.default_timer()
+        # start = timeit.default_timer()
         frame0 = self.get_current_image_in_lab(0)
         frame1 = self.get_current_image_in_lab(1)
         self.virtual_rubiks_cube.cube_position = self.visual_recognition.get_colors(frame0, frame1)
@@ -105,14 +87,9 @@ class rubiks_cube_solving_robot:
         try:
             solution = self.virtual_rubiks_cube.get_solution()
             self.virtual_rubiks_cube.execute_algorithm(solution)
-            try:
-                pi_sender.run_command('on ' + solution, ssh)
-                time.sleep(.5)
-                pi_sender.run_command('of', ssh)
-            except:
-                print('unable to comunicate with rpi')
 
-            print(timeit.default_timer() - start)
+            self.cube.execute_algorithm_string(solution)
+
         except Exception as e:
             print('couldn"t find solution')
             print(e)
@@ -123,13 +100,10 @@ class rubiks_cube_solving_robot:
 
     def scramble(self):
         scramble = self.virtual_rubiks_cube.get_scramble(moves = 50)
+        print(scramble)
         self.virtual_rubiks_cube.execute_algorithm(scramble)
-        try:
-            pi_sender.run_command('on ' + scramble, ssh)
-            time.sleep(.5)
-            pi_sender.run_command('of', ssh)
-        except:
-            print('unable to comunicate with rpi')
+
+        self.cube.execute_algorithm_string(scramble)
 
     def initiate_quit(self):
         print('end')
@@ -172,3 +146,5 @@ while True:
 #     #robot.turn_side('r')
 
 # cv2.destroyAllWindows()
+
+robot.cube.arduino.dissconnect()
