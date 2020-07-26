@@ -7,6 +7,7 @@ import cv2
 import timeit
 import time
 import numpy
+import serial
 
 #adds robot interface to path
 sys.path.append(sys.path[0] + '/robot_interface')
@@ -79,20 +80,39 @@ class rubiks_cube_solving_robot:
         self.cube.execute_algorithm_string(move)
 
     def solve(self):
-        # start = timeit.default_timer()
+        start = time.time()
+        print("Taking pictures.")
         frame0 = self.get_current_image_in_lab(0)
         frame1 = self.get_current_image_in_lab(1)
+        finish_pictures_time = time.time()
+        print("Finished taking pictures in " + str(finish_pictures_time - start) + " seconds.")
+        print("Getting cube colors.")
         self.virtual_rubiks_cube.cube_position = self.visual_recognition.get_colors(frame0, frame1)
-
+        finish_getting_cube_colors_time = time.time()
+        print("Fininshed getting cube colors in " + str(finish_getting_cube_colors_time - finish_pictures_time) + " seconds.")
         try:
+            print("Finding solution.")
             solution = self.virtual_rubiks_cube.get_solution()
             self.virtual_rubiks_cube.execute_algorithm(solution)
+            finish_finding_soltuion_time = time.time()
+            print("Finished finding solution in " + str(finish_finding_soltuion_time - finish_getting_cube_colors_time) + " seconds.")
 
+            print("Sending solution")
             self.cube.execute_algorithm_string(solution)
+            finished_sending_solution_time = time.time()
+            print("Finished sending solution in"  + str(finished_sending_solution_time - finish_finding_soltuion_time) + " seconds.")
+
+            print("Executing solution")
+            self.cube.arduino.wait_for_ready()
+            finished_executing_solution_time = time.time()
+            print("Finished executing solution in"  + str(finished_executing_solution_time - finished_sending_solution_time) + " seconds.")
+
 
         except Exception as e:
             print('couldn"t find solution')
             print(e)
+
+        print("The solve from button click to done took " + str(time.time() - start) + "seconds")
 
     def mirror():
          new_cube_state_to_set = self.visual_recognition.get_colors(frame0, frame1)
@@ -100,13 +120,14 @@ class rubiks_cube_solving_robot:
 
     def scramble(self):
         scramble = self.virtual_rubiks_cube.get_scramble(moves = 50)
+        # scramble = 'r r r r u u u u l l l l d d d d f f f f'
         print(scramble)
         self.virtual_rubiks_cube.execute_algorithm(scramble)
 
         self.cube.execute_algorithm_string(scramble)
 
     def initiate_quit(self):
-        print('end')
+        print("Initiating shutdown.")
         self.quit = True
 
     def render(self):
@@ -119,18 +140,28 @@ class rubiks_cube_solving_robot:
         #todo create acceleration calibration function in turn scrips
         return 1
 
-
+print("Loading robot.")
 robot = rubiks_cube_solving_robot()
+print("Finished loading robot.")
 
 # for i in range(1,5):
 #     winsound.Beep(2000, 100)
+def update(event, cursor_y, cursor_x, flag, flag2):
+    global robot
+    robot.update(event, cursor_y, cursor_x, flag, flag2)
+
+cv2.destroyAllWindows()
 
 while True:
-    cv2.imshow('frame', robot.render())
-    cv2.setMouseCallback('frame', robot.update)
-    cv2.moveWindow('frame', 1920,-35)
-    if cv2.waitKey(1) & 0xFF == ord('q') or robot.quit:
-        break
+    try:
+        cv2.imshow('frame', robot.render())
+        cv2.setMouseCallback('frame', update)
+        # cv2.moveWindow('frame', 1920,-35)
+        if cv2.waitKey(1) & 0xFF == ord('q') or robot.quit:
+            break
+    except Exception as e:
+        cv2.destroyAllWindows()
+
 
 # file_number = str(len(os.listdir('training_images/')))
 # os.mkdir('training_images/' + file_number)
@@ -145,6 +176,6 @@ while True:
 #     robot.scramble()
 #     #robot.turn_side('r')
 
-# cv2.destroyAllWindows()
+cv2.destroyAllWindows()
 
 robot.cube.arduino.dissconnect()

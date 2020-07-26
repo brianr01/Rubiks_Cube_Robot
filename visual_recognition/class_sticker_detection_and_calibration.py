@@ -4,9 +4,15 @@ import statistics
 import pickle
 import sys
 import time
+
+print("Loading Tensorflow and ML model.")
+print("\u001b[30m")
 import tensorflow as tf
 model = tf.keras.models.load_model("cube_ai_model_9995")
 CATEGORIES = ['u','d','l','r','f','b']
+print("\u001b[37m")
+print("Finished loading Tensorflow and ML model.")
+
 
 class Sticker_Detection_And_Calibration:
     def __init__(self, sticker_name):
@@ -78,6 +84,7 @@ class Sticker_Detection_And_Calibration:
 
     def get_color_prediction_for_image(self, image):
         predictions = model.predict([image])[0].tolist()
+
         self.current_color = CATEGORIES[predictions.index(max(predictions))]
 
         return self.current_color

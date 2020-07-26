@@ -72,35 +72,149 @@ void setup() {
 void loop() {
 if(stringComplete)
 {
-  getNextCommand();
-  getCommandName();
-  getData();
-  if(commandName.equals("3"))
-  {
-    turn();
-  }
-  if (commandName.equals("1"))
-  {
-    power();
-  }
-  if (commandName.equals("2"))
-  {
-    changeDirection();
-  }
+  while (true) {
+    getNextCommand();
+    Serial.println(commandName);
+    // ============-POWER-=================
+      // POWER ON
+      if (commandName.equals("a"))
+      {
+          digitalWrite(RP, LOW);
+          digitalWrite(LP, LOW);
+          digitalWrite(UP, LOW);
+          digitalWrite(DP, LOW);
+          digitalWrite(FP, LOW);
+          digitalWrite(BP, LOW);
+      }
+      // POWER OFF
+      else if (commandName.equals("b"))
+      {
+          delay(1000);
+          digitalWrite(RP, HIGH);
+          digitalWrite(LP, HIGH);
+          digitalWrite(UP, HIGH);
+          digitalWrite(DP, HIGH);
+          digitalWrite(FP, HIGH);
+          digitalWrite(BP, HIGH);
+      }
+    // ============-POWER-=================
 
-  if(inputString.equals("|")) {
-    stringComplete = false;
-    inputString = "";
-    Serial.println(inputString);
-  }
 
+    // ============-DIRECTION-=================
+      // CLOCKWISE
+      else if (commandName.equals("c"))
+      {
+          digitalWrite(RD, LOW);
+          digitalWrite(LD, LOW);
+          digitalWrite(UD, LOW);
+          digitalWrite(DD, LOW);
+          digitalWrite(FD, LOW);
+          digitalWrite(BD, LOW);
+      }
+      // COUNTER CLOCKWISE
+      else if (commandName.equals("d"))
+      {
+          digitalWrite(RD, HIGH);
+          digitalWrite(LD, HIGH);
+          digitalWrite(UD, HIGH);
+          digitalWrite(DD, HIGH);
+          digitalWrite(FD, HIGH);
+          digitalWrite(BD, HIGH);
+      }
+    // ============-DIRECTION-=================
+
+
+    // ==============-TURN-====================
+      // RIGHT
+      else if (commandName.equals("e"))
+      {
+          for (int i = 0; i < 200; i++)
+              {
+                  digitalWrite(RS, HIGH);
+                  delayMicroseconds(120);
+                  digitalWrite(RS, LOW);
+                  delayMicroseconds(110);
+          
+              }
+      }
+      // LEFT
+      else if (commandName.equals("f"))
+      {
+          for (int i = 0; i < 200; i++)
+              {
+                  digitalWrite(LS, HIGH);
+                  delayMicroseconds(120);
+                  digitalWrite(LS, LOW);
+                  delayMicroseconds(110);
+          
+              }
+      }
+      // UP
+      else if (commandName.equals("g"))
+      {
+          Serial.println("ready2");
+          for (int i = 0; i < 200; i++)
+              {
+                  digitalWrite(US, HIGH);
+                  delayMicroseconds(120);
+                  digitalWrite(US, LOW);
+                  delayMicroseconds(110);
+          
+              }
+      }
+      // DOWN
+      else if (commandName.equals("h"))
+      {
+          for (int i = 0; i < 200; i++)
+              {
+                  digitalWrite(DS, HIGH);
+                  delayMicroseconds(120);
+                  digitalWrite(DS, LOW);
+                  delayMicroseconds(110);
+          
+              }
+      }
+      // FRONT
+      else if (commandName.equals("i"))
+      {
+          for (int i = 0; i < 200; i++)
+              {
+                  digitalWrite(FS, HIGH);
+                  delayMicroseconds(120);
+                  digitalWrite(FS, LOW);
+                  delayMicroseconds(110);
+          
+              }
+      }
+      // BACK
+      else if (commandName.equals("j"))
+      {
+          for (int i = 0; i < 200; i++)
+              {
+                  digitalWrite(BS, HIGH);
+                  delayMicroseconds(120);
+                  digitalWrite(BS, LOW);
+                  delayMicroseconds(110);
+          
+              }
+      }
+    // ==============-TURN-====================
+
+    
+    if(inputString.equals("|")) {
+      stringComplete = false;
+      inputString = "";
+      Serial.println("ready");
+      break;
+    }
+  }
 }
 
 }
 
 void getNextCommand() {
-    commandString = inputString.substring(0, inputString.indexOf(">") + 1);
-    inputString = inputString.substring(inputString.indexOf(">") + 1, inputString.indexOf("|") + 1); 
+    commandName = inputString.substring(0, 1);
+    inputString = inputString.substring(1, inputString.indexOf("|") + 1); 
 }
 
 void getCommandName()
@@ -119,119 +233,7 @@ void getData()
   }
 }
 
-void power()
-{
-    if (dataString.equals("1"))
-    {
-        digitalWrite(RP, LOW);
-        digitalWrite(LP, LOW);
-        digitalWrite(UP, LOW);
-        digitalWrite(DP, LOW);
-        digitalWrite(FP, LOW);
-        digitalWrite(BP, LOW);
-    }
-    if (dataString.equals("0"))
-    {
-        digitalWrite(RP, HIGH);
-        digitalWrite(LP, HIGH);
-        digitalWrite(UP, HIGH);
-        digitalWrite(DP, HIGH);
-        digitalWrite(FP, HIGH);
-        digitalWrite(BP, HIGH);
-    }
-}
 
-void turn()
-{
-    if (dataString.equals("0"))
-    {
-        for (int i = 0; i < 200; i++)
-            {
-                digitalWrite(RS, HIGH);
-                delayMicroseconds(110);
-                digitalWrite(RS, LOW);
-                delayMicroseconds(110);
-        
-            }
-    }
-    if (dataString.equals("1"))
-    {
-        for (int i = 0; i < 200; i++)
-            {
-                digitalWrite(LS, HIGH);
-                delayMicroseconds(110);
-                digitalWrite(LS, LOW);
-                delayMicroseconds(110);
-        
-            }
-    }
-    if (dataString.equals("2"))
-    {
-        for (int i = 0; i < 200; i++)
-            {
-                digitalWrite(US, HIGH);
-                delayMicroseconds(110);
-                digitalWrite(US, LOW);
-                delayMicroseconds(110);
-        
-            }
-    }
-    if (dataString.equals("3"))
-    {
-        for (int i = 0; i < 200; i++)
-            {
-                digitalWrite(DS, HIGH);
-                delayMicroseconds(110);
-                digitalWrite(DS, LOW);
-                delayMicroseconds(110);
-        
-            }
-    }
-    if (dataString.equals("4"))
-    {
-        for (int i = 0; i < 200; i++)
-            {
-                digitalWrite(FS, HIGH);
-                delayMicroseconds(110);
-                digitalWrite(FS, LOW);
-                delayMicroseconds(110);
-        
-            }
-    }
-    if (dataString.equals("5"))
-    {
-        for (int i = 0; i < 200; i++)
-            {
-                digitalWrite(BS, HIGH);
-                delayMicroseconds(110);
-                digitalWrite(BS, LOW);
-                delayMicroseconds(110);
-        
-            }
-    }
-}
-
-void changeDirection()
-{
-    if (dataString.equals("1"))
-    {
-        digitalWrite(RD, LOW);
-        digitalWrite(LD, LOW);
-        digitalWrite(UD, LOW);
-        digitalWrite(DD, LOW);
-        digitalWrite(FD, LOW);
-        digitalWrite(BD, LOW);
-    }
-    if (dataString.equals("0"))
-    {
-        digitalWrite(RD, HIGH);
-        digitalWrite(LD, HIGH);
-        digitalWrite(UD, HIGH);
-        digitalWrite(DD, HIGH);
-        digitalWrite(FD, HIGH);
-        digitalWrite(BD, HIGH);
-    }
-}
 
 void serialEvent() {
   while (Serial.available()) {

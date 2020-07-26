@@ -2,6 +2,7 @@ import arduino_controller
 
 class Robot_Direction_Controller:
     def __init__(self, arduino = None):
+        self.command_map = {'1': 'c', '0': 'd'}
         if (arduino is not None):
             self.arduino = arduino
         else:
@@ -9,7 +10,10 @@ class Robot_Direction_Controller:
 
     def enqueue_change_state(self, state):
         self.state = state
-        self.arduino.enqueue_command_tag('2', [self.get_state_string()])
+        self.arduino.enqueue_command_tag(self.get_command())
+
+    def get_command(self):
+        return self.command_map[self.get_state_string()]
 
     def get_state_string(self):
         return '1' if self.state else '0'

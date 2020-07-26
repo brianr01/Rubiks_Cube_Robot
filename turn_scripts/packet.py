@@ -27,13 +27,13 @@ class Packet:
 
     def send_character(self, character):
         self.arduino_connection.write(character.encode('UTF-8'))
-        time.sleep(0.001)
 
     def wait_for_response(self):
-         print(self.arduino_connection.readline())
+        print(self.arduino_connection.readline())
 
     def get_is_packet_finished_sending(self):
         self.is_packet_finished_sending = not self.packet_thread.isAlive()
+        return self.is_packet_finished_sending
 
         return self.is_packet_finished_sending
 

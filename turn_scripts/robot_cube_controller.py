@@ -34,12 +34,9 @@ class Robot_Cube_Controller:
                     self.turn.enqueue_side(move[0])
 
     def execute_algorithm_string(self, algorithm_string, power_off_pause_time_in_seconds = 1):
+        self.arduino.wait_for_ready()
+    
         self.power.enqueue_change_state(True)
         self.enqueue_algorithm_string(algorithm_string)
-        self.execute()
-
-        self.arduino.wait_for_ready()
-
-        time.sleep(power_off_pause_time_in_seconds)
         self.power.enqueue_change_state(False)
         self.execute()

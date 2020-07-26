@@ -13,7 +13,7 @@ resolution = [1920, 1080]
 captures = {}
 
 #set up the cameras
-print('setting up cameras')
+print('Setting up cameras.')
 try:
     cap0 = cv2.VideoCapture(0)
     cap1 = cv2.VideoCapture(2)
@@ -40,7 +40,7 @@ except Exception as error:
     frame1 = cv2.imread(sys.path[0] + '/frame1.jpg')
     use_synthetic_frames = True
 
-print('finished setting up cameras')
+print('Finished setting up cameras.')
 
 def get_current_frames():
     global frame0, frame1

@@ -41,7 +41,6 @@ class cube_detection_and_calibration:
         self.current_polygon_address = self.current_side + str(self.current_polygon_address_number)
         self.current_camera_number = self.sides_dictionary[self.current_side]
         self.current_polygon = self.cube[self.current_side][self.current_polygon_address]
-        print("current_side", self.current_side)
 
     def get_current_camera_number(self):
         return self.current_camera_number
@@ -162,7 +161,6 @@ class cube_detection_and_calibration:
 
     def get_colors(self, image_0, image_1):
         sides_for_camera = {}
-        jobs = []
         for side in self.sides_dictionary:
             if (self.sides_dictionary[side] == 0):
                 sides_for_camera[side] = image_0
@@ -175,31 +173,9 @@ class cube_detection_and_calibration:
                          'd':[],
                          'l':[],
                          'r':[]}
-        for side in self.cube:
-            for piece in self.cube[side]:
-                job = threading.Thread(target=self.cube[side][piece].get_color, args=([sides_for_camera[side]]))
-
-                jobs.append(job)
-
-        max_thread_count = 10
-        threads = []
-        while (len(jobs) >= 1):
-            while (len(threads) < max_thread_count):
-                if (len(jobs) <= 0):
-                    break
-                current_job = jobs[0]
-                current_job.start()
-                jobs.pop(0)
-                threads.append(current_job)
-            for thread_number in range(0, len(threads) - 1):
-                if not threads[thread_number].isAlive():
-                    threads.pop(thread_number)
-                    break
-        for thread in threads:
-            thread.join()
 
         for side in self.cube:
             for piece in self.cube[side]:
-                cube_position[side].append(self.cube[side][piece].current_color)
+                cube_position[side].append(self.cube[side][piece].get_color(sides_for_camera[side]))
 
         return cube_position
